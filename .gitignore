@@ -1,0 +1,23 @@
+# Python cache
+__pycache__/
+*.pyc
+
+# Virtual environments
+venv/
+.venv/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Raw data (never track)
+data/raw/*
+
+# Cleaned data: allow folder but ignore big files
+!data/cleaned/
+data/cleaned/cleaned_bigfive_v1.csv
+
+# OS junk
+.DS_Store
+
+# Quarto output folders
+bigfive_corr_files/

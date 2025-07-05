@@ -1,0 +1,40 @@
+---
+title: "Big Five Trait Correlation Check"
+author: "Caleb Lee"
+format: html
+jupyter: bigfive_venv
+execute: 
+  echo: true
+  warning: false
+  message: false
+---
+```{python}
+# Test environment
+import sys
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+print("Python version:", sys.version)
+print("Pandas version:", pd.__version__)
+print("Numpy version:", np.__version__)
+print("Seaborn version:", sns.__version__)
+
+```
+
+```{python}
+#Import dataset
+df = pd.read_csv("data-final.csv", sep='\t')
+#Data overview
+df.head()
+
+df.shape
+df.columns
+```
+```{python}
+#Keep unique participants
+#Removing duplicates by IP address
+df_clean = df[df['IPC'] == 1]
+df_clean.shape
+```
