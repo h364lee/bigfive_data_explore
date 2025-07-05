@@ -1,5 +1,6 @@
 # Data Version Log
 
+## 2025-07-04
 **Raw file**: data/raw/bigfive_raw.csv (1M rows from Kaggle)
 
 **Cleaned v1**: data/cleaned/cleaned_bigfive_v1.csv  
@@ -10,3 +11,10 @@
 
 To reproduce:
 Run `notebooks/00_data_cleaning.ipynb` with raw CSV in `data/raw/`
+## 2025-07-05
+
+- Finalized Emotional Stability → Neuroticism reversal at item level.
+- Added new NRT1–NRT10 items and recomputed Neuroticism mean.
+- Verified trait distributions with histograms (sample n=1,000).
+- Cleaned version: cleaned_bigfive_v1.csv (local only).
+
