@@ -24,6 +24,6 @@ Run `notebooks/00_data_cleaning.ipynb` with raw CSV in `data/raw/`
 - Confirmed all trait values fall within 1–5 range with normal minor outliers, no impossible values found.
 - Cleaned version remains: `cleaned_bigfive_v1.csv` (local only).
 - Decided to rename jupyter notebook `01_EDA.ipynb` to `01_univariate_EDA` to better organize notebooks.
-- Next step: group comparisons by gender and age bins in `02_group_comparison.ipynb`.
+- Next step: group comparisons by gender and age bins in `02_group_comparison.ipynb` (Scaffolded).
 - All code and EDA visuals reproducible via `notebooks/01_univariate_EDA.ipynb`.
 
