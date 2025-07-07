@@ -1,0 +1,29 @@
+---
+title: "Univariate EDA in R & Python"
+author: "Caleb Lee"
+format: html
+execute:
+    echo: true
+---
+
+## Load Packages & Data
+```{r}
+library(tidyverse) # tidyverse package (include ggplot2, dplyr, readr, etc.) - modern R tools for data import, wrangling, and plotting.
+
+bigfive <- read_csv('data/cleaned/cleaned_bigfive_v1.csv') # read_csv() - reads csv into an R data frame
+glimpse(bigfive) # glimpse() - quick overview 
+summary(bigfive) # summary() - basic descriptive stats
+```
+
+## Trait Histograms
+```{r}
+# Example: Extraversion
+ggplot(bigfive, aes(x = Extraversion)) +
+  geom_histogram(bins = 30, fill = "steelblue", color = "white") +
+  # binwidth = controls bar width (e.g., binwidth = 0.5) +
+  # bins = sets total number of bars +
+
+  geom_density(color='red', size=1) +
+  #
+  labs(title = "Histogram + Density: Extraversion", x = "Score", y = "Count") +
+  theme_minimal()

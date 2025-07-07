@@ -27,3 +27,17 @@ Run `notebooks/00_data_cleaning.ipynb` with raw CSV in `data/raw/`
 - Next step: group comparisons by gender and age bins in `02_group_comparison.ipynb` (Scaffolded).
 - All code and EDA visuals reproducible via `notebooks/01_univariate_EDA.ipynb`.
 
+## 2025-07-07
+- Created continent grouping variable from country codes: North America (NA), South America (SA), Europe (EU), Asia (AS), Oceania (OC). Dropped NONE and Other for clear regional factors.
+- Sampled 5,000 rows from the cleaned dataset (cleaned_bigfive_v1.csv).
+- Verified group counts: all final continents have N > 100.
+- Calculated mean, SD, and N for Openness, Conscientiousness, Extraversion, Agreeableness, and Neuroticism by continent.
+- Ran one-way ANOVA for each trait:
+    - Found significant differences for Openness, Conscientiousness, Agreeableness, and Neuroticism (all p < .001).
+    - No significant differences for Extraversion.
+- Ran Tukey HSD post-hoc tests for significant traits:
+    - Found Asia consistently lower in Openness and Agreeableness.
+    - North America significantly higher in Conscientiousness than Asia, Europe, and Oceania.
+    - North America and Oceania higher in Neuroticism than Asia.- Created and reviewed boxplot: Openness by Continent matches ANOVA/Tukey pattern.
+    - Next: Extend plots to other traits. Thinking weather I should do another group comparison (with multiple factors). 
+
