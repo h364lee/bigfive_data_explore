@@ -41,3 +41,6 @@ Run `notebooks/00_data_cleaning.ipynb` with raw CSV in `data/raw/`
     - North America and Oceania higher in Neuroticism than Asia.- Created and reviewed boxplot: Openness by Continent matches ANOVA/Tukey pattern.
     - Next: Extend plots to other traits. Thinking weather I should do another group comparison (with multiple factors). 
 
+## 2025-07-08
+- Completed R univariate EDA with descriptive table, Histograms + KDEs, and outlier boxplots with mean lines
+- Matched Python flow.

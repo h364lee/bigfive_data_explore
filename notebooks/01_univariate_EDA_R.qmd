@@ -20,32 +20,130 @@ bigfive_sample <- bigfive %>%
 glimpse(bigfive) # glimpse() - quick overview 
 summary(bigfive) # summary() - basic descriptive stats
 ```
-
-## Trait Histograms
+### Pivot to long format for easy faceting
 ```{r}
-# Example: Extraversion
-bw <- (max(bigfive_sample$Extraversion) - min(bigfive_sample$Extraversion)) / 30
+# Pivot to long format (makes faceting easy)
+bigfive_long <- bigfive_sample %>%
+  pivot_longer(
+    cols = c(Openness, Conscientiousness, Extraversion, Agreeableness, Neuroticism),
+    names_to = 'Trait',
+    values_to = 'Score'
+  )
+```
+## Descriptive Stats in knitr::kable
+```{r}
+# Descriptive Stats 
+trait_summary <- bigfive_long %>%
+  group_by(Trait) %>%
+  summarize(
+    n = n(),
+    mean = mean(Score, na.rm = TRUE),
+    sd = sd(Score, na.rm = TRUE), 
+    min = min(Score, na.rm = TRUE), 
+    max = max(Score, na.rm = TRUE)
+  )
+knitr::kable(trait_summary, caption = "Table 1. Descriptive Statistics for Big Five Traits (n = 5,000)")
+```
+## Trait Histograms
+### Single trait(Extraversion) histogram + KDE + mean line 
+```{r}
+# Quick test: single trait histogram + KDE + mean line, fixed Likert 1–5
 
+# Calculate mean
+extraversion_mean <- mean(bigfive_sample$Extraversion, na.rm = TRUE)
+
+# Histogram + KDE + mean line
 ggplot(bigfive_sample, aes(x = Extraversion)) + 
-  # Histogram
   geom_histogram(
-    bins = 30, 
-    # bins = sets total number of bars 
-    fill = "steelblue", 
-    color = "white"
-    ) +
-  # KDE
+    aes(y = ..density..),
+    bins = 30,
+    fill = 'steelblue',
+    color = 'white'
+  ) +
   geom_density(
-    aes(y = ..density.. *nrow(bigfive_sample) * bw), #scales the density up to counts: ..density.. = density height; nrow(bigfive_sample) = total N, bin width
-    color='red', 
-    size=1
-    )+
-  # x-axis scale
+    color = 'red',
+    size = 1
+  ) +
+  geom_vline(
+    xintercept = extraversion_mean,
+    color = 'black',
+    linetype = 'dashed', 
+    size = 1
+  ) +
   scale_x_continuous(limits = c(1, 5), breaks = 1:5) +
-  # Labels
   labs(
-    title = "Histogram + Density: Extraversion (Sample n = 5,000)",
-    x='Score', 
-    y='Count') +
+    title = "Histogram + KDE: Extraversion (n = 5,000)",
+    x = 'Score',
+    y = 'Density'
+  ) +
+  theme_minimal()
+```
+### All trait histogram + KDE + mean line
+```{r}
+# All traits: facet histogram + KDE, same Likert scale
 
-  theme_minimal() # applies a clean and simple theme style
+# Calculate means for each trait
+trait_means <- bigfive_long %>%
+  group_by(Trait) %>%
+  summarize (Mean = mean(Score, na.rm = TRUE))
+
+# Faceted histogram + KDE + mean line 
+ggplot(bigfive_long, aes(x = Score)) +
+  geom_histogram(
+    aes(y = ..density..),
+    bins = 30,
+    fill = 'steelblue',
+    color = 'white'
+  ) +
+  geom_density(
+    color = 'red',
+    size = 1
+  ) +
+  geom_vline(
+    data = trait_means,
+    aes(xintercept = Mean),
+    color = 'black',
+    linetype = 'dashed',
+    size = 1
+  ) +
+  facet_wrap(~ Trait) +
+  scale_x_continuous(limits = c(1, 5), breaks = 1:5) +
+  labs(
+    title = "Big Five Traits: Histogram + KDE (n = 5,000)",
+    x = 'Score',
+    y = 'Density'
+  ) +
+  theme_minimal()
+```
+
+## Boxplot for Outlier Checks
+### Single Boxplot (Openness)
+```{r}
+ggplot(bigfive_sample, aes(y = Openness, x = '', fill = 'lightblue')) +
+  geom_boxplot(fill = 'lightblue') +
+  geom_hline(
+    yintercept = mean(bigfive_sample$Openness, na.rm = TRUE),
+    color = 'red',
+    linetype = 'dashed',
+    size = 1
+  ) +
+  scale_y_continuous(limits = c(1,5), breaks = 1:5) +
+  labs(
+    title = "Boxplot: Openness with Mean Line (n = 5,000)",
+    x = '', 
+    y = 'Openness Score'
+  ) +
+  theme_minimal()
+```
+### Boxplot for all traits
+```{r}
+ggplot(bigfive_long, aes(x = Trait, y = Score)) + 
+  geom_boxplot(fill = 'lightblue') + 
+  stat_summary (fun = mean, geom = 'point', shape = 20, size = 3, color = 'red') +
+  scale_y_continuous(limits = c(1,5), breaks = 1:5) + 
+  labs (
+    title = 'Boxplots of Big Five Traits with Mean Points',
+    x = 'Trait',
+    y = 'Score'
+  ) +
+  theme_minimal()
