@@ -1,4 +1,4 @@
-# 📊 Big Five Personality Analysis — July 2025 Showcase
+# Big Five Personality Analysis — July 2025 Showcase
 
 **Author:** Caleb Lee
 **Date:** July 2025  
@@ -6,7 +6,7 @@
 
 ---
 
-## 📌 **Project Overview**
+## **Overview**
 
 This project:
 - Cleans and explores a ~1M-row Big Five dataset.
@@ -18,7 +18,7 @@ This project:
 
 ---
 
-## ✅ **Main Steps**
+## **Main Steps**
 
 1. **Data Cleaning & EDA**
    - Inspect raw data
@@ -44,7 +44,7 @@ This project:
 
 ---
 
-## ⚙️ **Tech Stack**
+## **Tech Stack**
 
 - **Python:** pandas, numpy, seaborn, matplotlib, statsmodels
 - **R:** tidyverse, ggplot2, psych
@@ -54,5 +54,3 @@ This project:
 
 ---
 
-## 📂 **Repo Structure**
-[To be added]
