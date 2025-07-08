@@ -2,7 +2,7 @@
 
 **Author:** Caleb Lee
 **Date:** July 2025  
-**Goal:** This project demonstrates end-to-end data science and psychometric analysis skills using a large-scale Big Five personality dataset. It combines Python, R, Quarto, and version control to showcase research ability for my upcoming honours thesis in psychology/neuroscience.
+**Goal:** This project demonstrates end-to-end data science and psychometric analysis skills using a large-scale Big Five personality dataset. It combines Python, R, Quarto, and version control to showcase research ability for my upcoming honours thesis in psychology.
 
 ---
 
@@ -10,11 +10,11 @@
 
 This project:
 - Cleans and explores a ~1M-row Big Five dataset.
-- Runs exploratory data analysis (EDA), psychometric checks, and advanced statistical models.
-- Applies factor analysis and cluster analysis to uncover trait structures and natural groupings.
+- Runs exploratory data analysis (EDA), psychometric checks, and statistical models.
+- Applies factor analysis and cluster analysis to practice uncovering trait structures and natural groupings.
 - Uses both **Python** (pandas, seaborn, statsmodels) and **R** (tidyverse, psych).
 - Produces a publication-ready Quarto report in Elsevier format.
-- Includes stretch tasks: optional SQL, reveal.js slide deck, and video summary.
+- Possible stretch tasks: optional SQL, reveal.js slide deck, and video summary.
 
 ---
 
@@ -48,7 +48,7 @@ This project:
 
 - **Python:** pandas, numpy, seaborn, matplotlib, statsmodels
 - **R:** tidyverse, ggplot2, psych
-- **Quarto:** reproducible, cross-language paper (Jupyter → Quarto)
+- **Quarto:** reproducible, cross-language paper (R + Python)
 - **Version Control:** Git & GitHub
 - **Optional:** SQLite, reveal.js, video recording
 
