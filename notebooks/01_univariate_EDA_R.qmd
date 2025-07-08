@@ -10,7 +10,13 @@ execute:
 ```{r}
 library(tidyverse) # tidyverse package (include ggplot2, dplyr, readr, etc.) - modern R tools for data import, wrangling, and plotting.
 
-bigfive <- read_csv('data/cleaned/cleaned_bigfive_v1.csv') # read_csv() - reads csv into an R data frame
+bigfive <- read_csv('../data/cleaned/cleaned_bigfive_v1.csv') # read_csv() - reads csv into an R data frame
+
+#Sampling
+set.seed(42) # same random seed for reproducibility
+bigfive_sample <- bigfive %>%
+  sample_n(5000)
+
 glimpse(bigfive) # glimpse() - quick overview 
 summary(bigfive) # summary() - basic descriptive stats
 ```
@@ -18,12 +24,28 @@ summary(bigfive) # summary() - basic descriptive stats
 ## Trait Histograms
 ```{r}
 # Example: Extraversion
-ggplot(bigfive, aes(x = Extraversion)) +
-  geom_histogram(bins = 30, fill = "steelblue", color = "white") +
-  # binwidth = controls bar width (e.g., binwidth = 0.5) +
-  # bins = sets total number of bars +
+bw <- (max(bigfive_sample$Extraversion) - min(bigfive_sample$Extraversion)) / 30
 
-  geom_density(color='red', size=1) +
-  #
-  labs(title = "Histogram + Density: Extraversion", x = "Score", y = "Count") +
-  theme_minimal()
+ggplot(bigfive_sample, aes(x = Extraversion)) + 
+  # Histogram
+  geom_histogram(
+    bins = 30, 
+    # bins = sets total number of bars 
+    fill = "steelblue", 
+    color = "white"
+    ) +
+  # KDE
+  geom_density(
+    aes(y = ..density.. *nrow(bigfive_sample) * bw), #scales the density up to counts: ..density.. = density height; nrow(bigfive_sample) = total N, bin width
+    color='red', 
+    size=1
+    )+
+  # x-axis scale
+  scale_x_continuous(limits = c(1, 5), breaks = 1:5) +
+  # Labels
+  labs(
+    title = "Histogram + Density: Extraversion (Sample n = 5,000)",
+    x='Score', 
+    y='Count') +
+
+  theme_minimal() # applies a clean and simple theme style
