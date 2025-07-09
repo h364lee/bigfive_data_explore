@@ -1,5 +1,5 @@
 ---
-title: "Univariate EDA in R & Python"
+title: "Univariate EDA in R"
 author: "Caleb Lee"
 format: html
 execute:
@@ -10,10 +10,10 @@ execute:
 ```{r}
 library(tidyverse) # tidyverse package (include ggplot2, dplyr, readr, etc.) - modern R tools for data import, wrangling, and plotting.
 
-bigfive <- read_csv('../data/cleaned/cleaned_bigfive_v1.csv') # read_csv() - reads csv into an R data frame
+bigfive <- read_csv('./data/cleaned/cleaned_bigfive_v1.csv') # read_csv() - reads csv into an R data frame
 
 #Sampling
-set.seed(42) # same random seed for reproducibility
+set.seed(12) # same random seed for reproducibility
 bigfive_sample <- bigfive %>%
   sample_n(5000)
 

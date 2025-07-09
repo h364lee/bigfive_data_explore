@@ -42,5 +42,22 @@ Run `notebooks/00_data_cleaning.ipynb` with raw CSV in `data/raw/`
     - Next: Extend plots to other traits. Thinking weather I should do another group comparison (with multiple factors). 
 
 ## 2025-07-08
+### part 1
 - Completed R univariate EDA with descriptive table, Histograms + KDEs, and outlier boxplots with mean lines
 - Matched Python flow.
+### part 2
+- Sampled the cleaned Big Five dataset (n = 5,000, same random seed = 42)
+- Created continent groups matching my Python workflow:
+    - North America, South America, Europe, Asia, Oceania
+    - Countries not in these bins are assigned Other 
+    - Filtered out NONE and low-n Other countries (e.g., minor African states, Russia, Turkey)
+    - Verified group counts and listed remaining Other countries to check the logic
+    - Ran one-way ANOVAs for each Big Five trait to test differences by continent
+    - Ran Tukey HSD post-hoc tests for pairwise comparisons
+    - Tidied the ANOVA + Tukey results using broom + knitr::kable for clean tables in Quarto
+    - Wrote a reproducible loop to do ANOVA + Tukey for all traits at once
+    - Reviewed the output:
+        - Openness, Extraversion, Agreeableness, and Neuroticism showed consistent significant differences, mainly with Asia scoring lower than other region
+        - Conscientiousness showed a small significant difference between South America and Asia
+- Documented the interpretations for each trait as draft Results text.
+- Tried how to display ANOVA and Tukey HSD results in knitr::kable format, but need to review it more tomorrow.

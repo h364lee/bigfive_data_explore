@@ -1,0 +1,242 @@
+---
+title: "Group Comparison in R"
+author: "Caleb Lee"
+format: html
+execute:
+    echo: true
+---
+## Creating continent groups
+### Import libraries and sample
+```{r}
+library(tidyverse)
+library (broom)
+bigfive <- read_csv('./data/cleaned/cleaned_bigfive_v1.csv') # read_csv() - reads csv into an R data frame
+
+#Sampling
+set.seed(42) # same random seed for reproducibility
+bigfive_sample <- bigfive %>%
+  sample_n(5000)
+```
+### Creating Continent groups; filtering for NONE and minor countries.
+```{r}
+#Checking which countries are present
+bigfive_sample %>%
+    count(country, sort = TRUE) %>%
+    print (n = Inf)
+```
+
+```{r}
+# Sort countries into continents (same as python)
+
+# Continent group creation
+north_america <- c('US', 'CA', 'MX', 'PR', 'CR', 'DO', 'JM', 'TT', 'BM', 'HN')
+south_america <- c('BR', 'AR', 'CL', 'CO', 'PE', 'VE', 'EC', 'BO', 'PY')
+europe <- c( 'RO','GB', 'IE', 'DE', 'FR', 'NL', 'SE', 'NO', 'FI', 'DK', 'BE', 'PL',
+             'IT', 'PT', 'ES', 'CH', 'AT', 'CZ', 'HU', 'SK', 'EE', 'LT', 'UA',
+             'BG', 'GR', 'RS', 'HR', 'CY', 'MK', 'BA', 'IS', 'JE', 'LV', 'MD',
+             'ME', 'AD', 'AL')
+asia <- c('IN', 'PH', 'MY', 'SG', 'ID', 'PK', 'HK', 'JP', 'KR', 'VN', 'TH',
+          'IR', 'LB', 'TW', 'AE', 'IL', 'JO', 'NP', 'CN', 'KH', 'QA', 'BN',
+          'KZ', 'MO', 'OM', 'BD', 'IQ', 'GE', 'BH', 'KW', 'LK', 'SA')
+oceania <- c('AU', 'NZ', 'PG', 'GU')
+
+bigfive_sample <- bigfive_sample %>%
+    # filtering NONE entries
+    filter(country != 'NONE') %>%
+    mutate(
+        continent = case_when(
+            country %in% north_america ~ 'NA',
+            country %in% south_america ~ 'SA',
+            country %in% europe ~ 'EU',
+            country %in% asia ~ 'AS',
+            country %in% oceania ~ 'OC',
+            TRUE ~ 'Other'
+        )
+    ) 
+bigfive_sample %>%
+    count(continent, sort = TRUE)
+
+```
+```{r}
+# What countries are in Other
+bigfive_sample %>%
+  filter(continent == 'Other') %>%
+  count(country, sort = TRUE)
+```
+```{r}
+# Excluded a bunch of African countries and transcontinental countries (RU, TR) due to low n
+bigfive_sample <- bigfive_sample %>%
+    filter(continent != 'Other')
+```
+### One-way ANOVA
+```{r}
+# Group means for Openness
+bigfive_sample %>%
+    group_by(continent) %>%
+    summarize(
+        mean = mean (Openness, na.rm = TRUE)
+    )
+# One-way ANOVA for Openness
+openness_anova <- aov(Openness ~ continent, data = bigfive_sample)
+anova_tidy <- tidy(openness_anova)
+summary(openness_anova)
+knitr::kable(anova_tidy, caption = "Table: ANOVA for Openness by Continent")
+
+# Tukey HSD for Openness
+TukeyHSD(openness_anova)
+```
+
+#### Review again tomorrow
+```{r}
+# One-way ANOVA result in knitr::kable:
+# Fit ANOVA model
+openness_anova <- aov(Openness ~ continent, data = bigfive_sample)
+
+# Tidy ANOVA result
+anova_tidy <- tidy(openness_anova)
+
+# Display in table
+knitr::kable(
+  anova_tidy,
+  caption = "Table 1. One-way ANOVA for Openness by Continent",
+  digits = 4
+)
+
+# Tukey HSD in knitr::kable:
+openness_tukey <- TukeyHSD(openness_anova)
+
+# Convert to dataframe
+tukey_df <- as.data.frame(openness_tukey$continent)
+
+# Add comparison pair as a column
+tukey_df$comparison <- rownames(tukey_df)
+
+# Reorder columns for clarity
+tukey_df <- tukey_df %>%
+  select(comparison, diff, lwr, upr, `p adj`)
+
+# Display nicely
+knitr::kable(
+  tukey_df,
+  caption = "Table 2. Tukey HSD Post-Hoc Test for Openness by Continent",
+  digits = 4
+)
+```
+```{r}
+# Looping for all traits
+traits <- c('Openness', 'Conscientiousness', 'Extraversion', 'Agreeableness', 'Neuroticism')
+
+for (trait in traits) {
+    cat('\n\n### ANOVA for', trait, 'by Continent ###\n\n')
+
+    # Group means
+    means <- bigfive_sample %>%
+        group_by(continent) %>%
+        summarize(
+            mean = mean(.data[[trait]], na.rm = TRUE)
+        )
+    print(means)
+
+    # ANOVA
+    model <- aov(as.formula(paste(trait, '~ continent')), data = bigfive_sample)
+    print (summary(model))
+
+    # Tukey HSD
+    cat('\nTukey HSD:\n')
+    print(TukeyHSD(model))
+}
+```
+#### Review again tomorrow
+```{r}
+traits <- c('Openness', 'Conscientiousness', 'Extraversion', 'Agreeableness', 'Neuroticism')
+
+for (trait in traits) {
+  cat('\n\n### ANOVA for', trait, 'by Continent\n\n')
+
+  # Group means
+  means <- bigfive_sample %>%
+    group_by(continent) %>%
+    summarize(mean = mean(.data[[trait]], na.rm = TRUE))
+  print(means)
+
+  # ANOVA
+  model <- aov(as.formula(paste(trait, '~ continent')), data = bigfive_sample)
+  tidy_anova <- tidy(model)
+  print(
+    knitr::kable(
+      tidy_anova,
+      caption = paste('Table: ANOVA for', trait),
+      digits = 4
+    )
+  )
+
+  # Tukey HSD
+  tukey <- TukeyHSD(model)
+  tukey_df <- as.data.frame(tukey$continent)
+  tukey_df$comparison <- rownames(tukey_df)
+  tukey_df <- tukey_df %>%
+    select(comparison, diff, lwr, upr, `p adj`)
+  print(
+    knitr::kable(
+      tukey_df,
+      caption = paste('Table: Tukey HSD for', trait),
+      digits = 4
+    )
+  )
+}
+```
+### ANOVA Result (Review later)
+#### Openness:
+ANOVA: F = 11.75, p < .001 → significant overall difference.
+
+Tukey: Asia (AS) significantly lower than all other continents (EU, NA, OC, SA).
+
+EU–AS, NA–AS, OC–AS, SA–AS: all p < .01.
+
+Other pairs not significant.
+
+Participants in Asia scored significantly lower on Openness than those from Europe, North America, Oceania, and South America. No other differences were significant.
+
+#### Conscientiousness
+ANOVA: F = 5.27, p < .001 → significant.
+
+Tukey: Only SA–AS is significant (p = .005).
+
+South America mean = 3.17 → Asia mean = 3.14 → SA slightly higher.
+
+NA–AS, EU–AS, other pairs → NS.
+
+South America showed slightly higher Conscientiousness than Asia. No other pairs were significant.
+
+#### Extraversion
+ANOVA: F = 8.13, p < .001 → significant.
+
+Tukey:
+
+EU–AS, NA–AS, SA–AS significant.
+
+Other pairs → NS.
+
+Asia scored significantly lower in Extraversion than Europe, North America, and South America.
+
+####  Agreeableness
+ANOVA: F = 14.93, p < .001 → significant.
+
+Tukey:
+
+EU–AS, NA–AS, OC–AS, SA–AS → all significant.
+
+Other pairs → NS.
+
+Asia scored significantly lower in Agreeableness than Europe, North America, Oceania, and South America.
+
+####  Neuroticism
+ANOVA: F = 11.69, p < .001 → significant.
+
+Tukey:
+
+NA–AS, OC–AS, SA–AS → significant.
+
+SA–EU, SA–OC → significant.
+
+Asia showed significantly lower Neuroticism than North America, Oceania, and South America. South America also scored significantly lower than Europe and Oceania. (Many pairs have small diffs)
