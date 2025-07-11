@@ -1,0 +1,104 @@
+--- 
+title: "Group Coparion in R without Sampling, using the full dataset"
+author: "Caleb Lee"
+format: html
+execute: 
+    echo: true
+---
+```{r}
+# Import libraries
+library(tidyverse)
+library(broom)
+bigfive <- read_csv('./data/cleaned/cleaned_bigfive_v1.csv')
+
+# filtering for NA and NONE
+bigfive_filtered <- bigfive %>%
+    filter(!is.na(country) & country != 'NONE')
+
+# seeing which countries are present
+bigfive_filtered %>%
+    count(country, sort = TRUE) %>%
+    print (n = Inf)
+```
+
+```{r}
+# created a CSV file summarizing the name, row count, geographical and cultural location of all 220 countries present (after filtered for NA and NONE)
+country_info <- read_csv('./data/cleaned/country_names_220.csv')
+
+# show unique continents
+country_info %>%
+  count(continent, sort = TRUE)
+
+# Show unique cultural groups
+country_info %>%
+  count(cultural_group, sort = TRUE)
+
+# Sum total row_count by CONTINENT
+country_info %>%
+  group_by(continent) %>%
+  summarize(
+    n_countries = n(),
+    total_row_count = sum(row_count, na.rm = TRUE)
+  ) %>%
+  arrange(desc(total_row_count))
+
+# Sum total row_count by CULTURAL GROUP
+country_info %>%
+  group_by(cultural_group) %>%
+  summarize(
+    n_countries = n(),
+    total_row_count = sum(row_count, na.rm = TRUE)
+  ) %>%
+  arrange(desc(total_row_count))
+
+```
+```{r}
+# Grouping by continent:
+# put russia in europe, put turkey in asia, and caribbean countries into south america
+library(dplyr)
+
+bigfive_continent <- bigfive_filtered %>%
+  mutate(continent = case_when(
+    # North America (mainland + Central America only)
+    country %in% c("US", "CA", "MX", "PR", "HN", "NI", "CR", "PA", "GT", "SV") ~ "North America",
+    
+    # South America (+ Caribbean islands grouped here)
+    country %in% c(
+      "BR", "AR", "CO", "CL", "PE", "VE", "UY", "DO", "EC", "GY", "SR", "BO", "PY",
+      "BZ", "JM", "TT", "GD", "AG", "BS", "CU", "DM", "KN", "LC", "VC", "HT", "BB", "CW", "KY", "AW", "SX", "MQ", "GP", "BM"
+    ) ~ "South America",
+    
+    # Europe (+ Russia)
+    country %in% c(
+      "GB", "IE", "IS", "NO", "SE", "FI", "DK", "NL", "FR", "DE", "IT", "ES", "PL", "PT", "BE", "AT", "CH", "LU", "MT",
+      "RU", "UA", "RS", "RO", "BG", "GR", "GE", "CY", "MK", "ME", "MD", "AM", "BY",
+      "CZ", "HU", "SK", "SI", "HR", "AL", "BA", "LT", "LV", "EE",
+      "LI", "MC", "SM", "GG", "JE", "IM", "FO", "AX", "XK", "AD"
+    ) ~ "Europe",
+    
+    # Asia (+ Turkey)
+    country %in% c(
+      "IN", "PK", "BD", "LK", "NP", "MV", "CN", "HK", "JP", "KR", "TW", "SG", "MY", "PH", "VN", "TH", "KH", "ID", "BN", "LA",
+      "MM", "TL", "PG", "MN", "KZ", "KG", "UZ", "AZ", "IL", "IQ", "SY", "IR", "JO", "LB", "PS", "YE", "SA", "AE", "KW", "QA",
+      "BH", "OM", "MO", "TR"
+    ) ~ "Asia",
+    
+    # Africa
+    country %in% c(
+      "ZA", "KE", "NG", "GH", "ZM", "UG", "SD", "ZW", "ET", "DZ", "MA", "TZ", "RW", "CM", "AO", "MW", "MZ", "SN", "SZ",
+      "LS", "BI", "BF", "BJ", "GM", "GN", "CI", "CV", "GQ", "KM", "MG", "MR", "NE", "SL", "TG", "TD", "CD", "DJ", "CG", "GA",
+      "SS", "EG", "LY"
+    ) ~ "Africa",
+    
+    # Oceania
+    country %in% c("AU", "NZ", "FJ", "WS", "VU", "CK", "FM", "PW", "PG", "TO", "TL", "MP", "GU", "NC", "MH", "NU") ~ "Oceania",
+    
+    # Other / Unclassified
+    TRUE ~ "Other"
+  ))
+
+
+  bigfive_continent %>%
+  count(continent) %>%
+  arrange(desc(n))
+

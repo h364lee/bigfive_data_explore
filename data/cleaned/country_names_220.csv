@@ -1,0 +1,221 @@
+index,country_code,country_name,row_count,continent,cultural_group
+1,US,United States,300435,North America,English-speaking
+2,GB,United Kingdom,43406,Europe,English-speaking
+3,CA,Canada,38329,North America,English-speaking
+4,AU,Australia,30297,Oceania,English-speaking
+5,DE,Germany,10892,Europe,Protestant Europe
+6,IN,India,9846,Asia,South Asia
+7,PH,Philippines,9466,Asia,Catholic Asia
+8,MX,Mexico,8273,North America,Latin America
+9,NO,Norway,7133,Europe,Protestant Europe
+10,NL,Netherlands,6910,Europe,Protestant Europe
+11,SE,Sweden,6524,Europe,Protestant Europe
+12,MY,Malaysia,6329,Asia,Other Asia
+13,NZ,New Zealand,5751,Oceania,English-speaking
+14,ID,Indonesia,4927,Asia,Other Asia
+15,SG,Singapore,4792,Asia,Confucian
+16,BR,Brazil,4767,South America,Latin America
+17,FR,France,4497,Europe,Catholic Europe
+18,IT,Italy,3812,Europe,Catholic Europe
+19,ES,Spain,3719,Europe,Catholic Europe
+20,PL,Poland,3621,Europe,Catholic Europe
+21,IE,Ireland,3498,Europe,English-speaking
+22,FI,Finland,3410,Europe,Protestant Europe
+23,DK,Denmark,3345,Europe,Protestant Europe
+24,RO,Romania,2908,Europe,Orthodox Europe
+25,CO,Colombia,2721,South America,Latin America
+26,RU,Russian Federation,2536,Europe,Orthodox Europe
+27,BE,Belgium,2474,Europe,Catholic Europe
+28,AR,Argentina,2430,South America,Latin America
+29,HK,Hong Kong,2421,Asia,Confucian
+30,ZA,South Africa,2398,Africa,Sub-Saharan Africa
+31,TR,Turkey,2063,Asia,Islamic
+32,PK,Pakistan,1994,Asia,South Asia
+33,PT,Portugal,1948,Europe,Catholic Europe
+34,GR,Greece,1931,Europe,Orthodox Europe
+35,CH,Switzerland,1842,Europe,Catholic Europe
+36,AE,United Arab Emirates,1722,Asia,Islamic
+37,AT,Austria,1717,Europe,Catholic Europe
+38,CL,Chile,1707,South America,Latin America
+39,HR,Croatia,1643,Europe,Catholic Europe
+40,VN,Viet Nam,1471,Asia,Other Asia
+41,RS,Serbia,1431,Europe,Orthodox Europe
+42,JP,Japan,1416,Asia,Confucian
+43,CZ,Czechia,1363,Europe,Catholic Europe
+44,TH,Thailand,1362,Asia,Other Asia
+45,PE,Peru,1295,South America,Latin America
+46,HU,Hungary,1169,Europe,Catholic Europe
+47,KR,"Korea, Republic of",1156,Asia,Confucian
+48,IL,Israel,1076,Asia,Middle East
+49,BG,Bulgaria,993,Europe,Orthodox Europe
+50,VE,"Venezuela, Bolivarian Republic of",925,South America,Latin America
+51,KE,Kenya,904,Africa,Sub-Saharan Africa
+52,EC,Ecuador,878,South America,Latin America
+53,CN,China,836,Asia,Confucian
+54,LT,Lithuania,825,Europe,Baltic
+55,SA,Saudi Arabia,765,Asia,Islamic
+56,EE,Estonia,751,Europe,Baltic
+57,SK,Slovakia,700,Europe,Catholic Europe
+58,EG,Egypt,683,Africa,Islamic
+59,TW,Taiwan,668,Asia,Confucian
+60,SI,Slovenia,653,Europe,Catholic Europe
+61,NG,Nigeria,631,Africa,Sub-Saharan Africa
+62,UA,Ukraine,571,Europe,Orthodox Europe
+63,CR,Costa Rica,489,North America,Latin America
+64,PR,Puerto Rico,431,North America,Latin America
+65,LV,Latvia,420,Europe,Baltic
+66,BA,Bosnia and Herzegovina,408,Europe,Orthodox Europe
+67,LB,Lebanon,408,Asia,Middle East
+68,IS,Iceland,385,Europe,Protestant Europe
+69,LK,Sri Lanka,380,Asia,South Asia
+70,MA,Morocco,354,Africa,Islamic
+71,TT,Trinidad and Tobago,325,South America,Latin America
+72,IR,"Iran, Islamic Republic of",323,Asia,Islamic
+73,JM,Jamaica,319,South America,Latin America
+74,GT,Guatemala,313,North America,Latin America
+75,AL,Albania,291,Europe,Orthodox Europe
+76,NP,Nepal,291,Asia,South Asia
+77,KW,Kuwait,289,Asia,Islamic
+78,MT,Malta,288,Europe,Catholic Europe
+79,BO,"Bolivia, Plurinational State of",280,South America,Latin America
+80,KZ,Kazakhstan,274,Asia,Other Asia
+81,MK,North Macedonia,272,Europe,Orthodox Europe
+82,JO,Jordan,267,Asia,Islamic
+83,UY,Uruguay,264,South America,Latin America
+84,DO,Dominican Republic,249,South America,Latin America
+85,QA,Qatar,236,Asia,Islamic
+86,GE,Georgia,229,Europe,Orthodox Europe
+87,CY,Cyprus,208,Europe,Orthodox Europe
+88,BD,Bangladesh,201,Asia,South Asia
+89,DZ,Algeria,192,Africa,Islamic
+90,PY,Paraguay,189,South America,Latin America
+91,KH,Cambodia,186,Asia,Other Asia
+92,GH,Ghana,167,Africa,Sub-Saharan Africa
+93,BN,Brunei Darussalam,166,Asia,Other Asia
+94,LU,Luxembourg,164,Europe,Catholic Europe
+95,BH,Bahrain,160,Asia,Islamic
+96,PA,Panama,159,North America,Latin America
+97,HN,Honduras,156,North America,Latin America
+98,MO,Macao,150,Asia,Confucian
+99,ET,Ethiopia,144,Africa,Sub-Saharan Africa
+100,TN,Tunisia,144,Africa,Islamic
+101,SV,El Salvador,142,North America,Latin America
+102,OM,Oman,136,Asia,Islamic
+103,MU,Mauritius,132,Africa,Sub-Saharan Africa
+104,BY,Belarus,123,Europe,Orthodox Europe
+105,NI,Nicaragua,120,North America,Latin America
+106,MD,"Moldova, Republic of",100,Europe,Orthodox Europe
+107,BB,Barbados,99,South America,Latin America
+108,ME,Montenegro,98,Europe,Orthodox Europe
+109,GU,Guam,94,Oceania,English-speaking
+110,BZ,Belize,89,North America,Latin America
+111,BS,Bahamas,85,South America,Latin America
+112,AM,Armenia,82,Europe,Orthodox Europe
+113,IQ,Iraq,74,Asia,Islamic
+114,ZM,Zambia,73,Africa,Sub-Saharan Africa
+115,UG,Uganda,70,Africa,Sub-Saharan Africa
+116,SD,Sudan,69,Africa,Islamic
+117,ZW,Zimbabwe,69,Africa,Sub-Saharan Africa
+118,MM,Myanmar,65,Asia,Other Asia
+119,TZ,"Tanzania, United Republic of",64,Africa,Sub-Saharan Africa
+120,AZ,Azerbaijan,63,Asia,Other Asia
+121,SY,Syrian Arab Republic,60,Asia,Islamic
+122,MV,Maldives,59,Asia,South Asia
+123,MN,Mongolia,55,Asia,Other Asia
+124,PS,Palestine,55,Asia,Middle East
+125,BW,Botswana,52,Africa,Sub-Saharan Africa
+126,JE,Jersey,51,Europe,Protestant Europe
+127,KY,Cayman Islands,44,South America,Latin America
+128,AF,Afghanistan,41,Asia,South Asia
+129,IM,Isle of Man,41,Europe,Protestant Europe
+130,LA,Lao People's Democratic Republic,39,Asia,Other Asia
+131,CW,Curaçao,35,South America,Latin America
+132,KG,Kyrgyzstan,35,Asia,Other Asia
+133,GG,Guernsey,33,Europe,Protestant Europe
+134,SR,Suriname,33,South America,Latin America
+135,BM,Bermuda,32,South America,Latin America
+136,AW,Aruba,28,South America,Latin America
+137,LY,Libya,27,Africa,Islamic
+138,FJ,Fiji,26,Oceania,Other Oceania
+139,GY,Guyana,26,South America,Latin America
+140,UZ,Uzbekistan,25,Asia,Other Asia
+141,RW,Rwanda,24,Africa,Sub-Saharan Africa
+142,CM,Cameroon,23,Africa,Sub-Saharan Africa
+143,FO,Faroe Islands,23,Europe,Protestant Europe
+144,GI,Gibraltar,22,Europe,Catholic Europe
+145,MZ,Mozambique,22,Africa,Sub-Saharan Africa
+146,VI,"Virgin Islands, U.S.",21,North America,Latin America
+147,MW,Malawi,18,Africa,Sub-Saharan Africa
+148,AG,Antigua and Barbuda,17,South America,Latin America
+149,SC,Seychelles,17,Africa,Sub-Saharan Africa
+150,LC,Saint Lucia,16,South America,Latin America
+151,GD,Grenada,15,South America,Latin America
+152,GL,Greenland,14,Europe,Protestant Europe
+153,PG,Papua New Guinea,14,Oceania,Other Oceania
+154,VC,Saint Vincent and the Grenadines,14,South America,Latin America
+155,AX,Åland Islands,13,Europe,Protestant Europe
+156,SO,Somalia,13,Africa,Sub-Saharan Africa
+157,AO,Angola,12,Africa,Sub-Saharan Africa
+158,HT,Haiti,12,South America,Latin America
+159,MG,Madagascar,12,Africa,Sub-Saharan Africa
+160,SN,Senegal,12,Africa,Sub-Saharan Africa
+161,SZ,Eswatini,11,Africa,Sub-Saharan Africa
+162,AD,Andorra,10,Europe,Catholic Europe
+163,BT,Bhutan,10,Asia,South Asia
+164,DM,Dominica,10,South America,Latin America
+165,KN,Saint Kitts and Nevis,10,South America,Latin America
+166,YE,Yemen,10,Asia,Islamic
+167,LS,Lesotho,8,Africa,Sub-Saharan Africa
+168,CI,Côte d'Ivoire,7,Africa,Sub-Saharan Africa
+169,CU,Cuba,7,South America,Latin America
+170,GM,Gambia,7,Africa,Sub-Saharan Africa
+171,PF,French Polynesia,7,Oceania,Other Oceania
+172,WS,Samoa,7,Oceania,Other Oceania
+173,RE,Réunion,6,Africa,Sub-Saharan Africa
+174,VU,Vanuatu,6,Oceania,Other Oceania
+175,CV,Cabo Verde,5,Africa,Sub-Saharan Africa
+176,LR,Liberia,5,Africa,Sub-Saharan Africa
+177,MP,Northern Mariana Islands,5,Oceania,Other Oceania
+178,MQ,Martinique,5,South America,Latin America
+179,SL,Sierra Leone,5,Africa,Sub-Saharan Africa
+180,TC,Turks and Caicos Islands,5,South America,Latin America
+181,TL,Timor-Leste,5,Asia,Other Asia
+182,TO,Tonga,5,Oceania,Other Oceania
+183,XK,Kosovo,5,Europe,Orthodox Europe
+184,CK,Cook Islands,4,Oceania,Other Oceania
+185,FM,"Micronesia, Federated States of",4,Oceania,Other Oceania
+186,GP,Guadeloupe,4,South America,Latin America
+187,LI,Liechtenstein,4,Europe,Catholic Europe
+188,MC,Monaco,4,Europe,Catholic Europe
+189,NC,New Caledonia,4,Oceania,Other Oceania
+190,SX,Sint Maarten,4,South America,Latin America
+191,AI,Anguilla,3,South America,Latin America
+192,CG,Congo,3,Africa,Sub-Saharan Africa
+193,GA,Gabon,3,Africa,Sub-Saharan Africa
+194,MR,Mauritania,3,Africa,Islamic
+195,PW,Palau,3,Oceania,Other Oceania
+196,SS,South Sudan,3,Africa,Sub-Saharan Africa
+197,AQ,Antarctica,2,Other,Other
+198,CD,"Congo, The Democratic Republic of the",2,Africa,Sub-Saharan Africa
+199,DJ,Djibouti,2,Africa,Islamic
+200,ML,Mali,2,Africa,Sub-Saharan Africa
+201,NU,Niue,2,Oceania,Other Oceania
+202,SM,San Marino,2,Europe,Catholic Europe
+203,TG,Togo,2,Africa,Sub-Saharan Africa
+204,TJ,Tajikistan,2,Asia,Other Asia
+205,VG,"Virgin Islands, British",2,South America,Latin America
+206,AS,American Samoa,1,Oceania,Other Oceania
+207,BF,Burkina Faso,1,Africa,Sub-Saharan Africa
+208,BI,Burundi,1,Africa,Sub-Saharan Africa
+209,BJ,Benin,1,Africa,Sub-Saharan Africa
+210,BQ,Bonaire,1,South America,Latin America
+211,FK,Falkland Islands (Malvinas),1,South America,Latin America
+212,GF,French Guiana,1,South America,Latin America
+213,GN,Guinea,1,Africa,Sub-Saharan Africa
+214,GQ,Equatorial Guinea,1,Africa,Sub-Saharan Africa
+215,KM,Comoros,1,Africa,Sub-Saharan Africa
+216,MF,Saint Martin,1,South America,Latin America
+217,MH,Marshall Islands,1,Oceania,Other Oceania
+218,NE,Niger,1,Africa,Sub-Saharan Africa
+219,SH,"Saint Helena, Ascension and Tristan da Cunha",1,Africa,Sub-Saharan Africa
+220,TD,Chad,1,Africa,Sub-Saharan Africa

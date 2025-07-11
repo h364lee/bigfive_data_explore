@@ -121,7 +121,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 ✖ dplyr::lag()    masks stats::lag()
 ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>bigfive <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">'../data/cleaned/cleaned_bigfive_v1.csv'</span>) <span class="co"># read_csv() - reads csv into an R data frame</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span> (broom)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>bigfive <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">'../data/cleaned/cleaned_bigfive_v1.csv'</span>) <span class="co"># read_csv() - reads csv into an R data frame</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Rows: 602587 Columns: 126
 ── Column specification ────────────────────────────────────────────────────────
@@ -353,7 +354,8 @@ dttm   (1): dateload
 </div>
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># One-way ANOVA for Openness</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>openness_anova <span class="ot">&lt;-</span> <span class="fu">aov</span>(Openness <span class="sc">~</span> continent, <span class="at">data =</span> bigfive_sample)</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(openness_anova)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>anova_tidy <span class="ot">&lt;-</span> <span class="fu">tidy</span>(openness_anova)</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(openness_anova)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>              Df Sum Sq Mean Sq F value  Pr(&gt;F)    
 continent      4    6.3  1.5666   11.75 1.7e-09 ***
@@ -361,8 +363,42 @@ Residuals   4835  644.8  0.1334
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Tukey HSD for Openness</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">TukeyHSD</span>(openness_anova)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(anova_tidy, <span class="at">caption =</span> <span class="st">"Table: ANOVA for Openness by Continent"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Table: ANOVA for Openness by Continent</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">term</th>
+<th style="text-align: right;">df</th>
+<th style="text-align: right;">sumsq</th>
+<th style="text-align: right;">meansq</th>
+<th style="text-align: right;">statistic</th>
+<th style="text-align: right;">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">continent</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">6.266247</td>
+<td style="text-align: right;">1.5665617</td>
+<td style="text-align: right;">11.74635</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Residuals</td>
+<td style="text-align: right;">4835</td>
+<td style="text-align: right;">644.823569</td>
+<td style="text-align: right;">0.1333658</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Tukey HSD for Openness</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">TukeyHSD</span>(openness_anova)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  Tukey multiple comparisons of means
     95% family-wise confidence level
@@ -383,29 +419,195 @@ SA-NA  0.03784911 -0.05354190 0.12924011 0.7906036
 SA-OC  0.05297515 -0.05362618 0.15957648 0.6559130</code></pre>
 </div>
 </div>
+<section id="review-again-tomorrow" class="level4">
+<h4 class="anchored" data-anchor-id="review-again-tomorrow">Review again tomorrow</h4>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Looping for all traits</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>traits <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">'Openness'</span>, <span class="st">'Conscientiousness'</span>, <span class="st">'Extraversion'</span>, <span class="st">'Agreeableness'</span>, <span class="st">'Neuroticism'</span>)</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (trait <span class="cf">in</span> traits) {</span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cat</span>(<span class="st">'</span><span class="sc">\n\n</span><span class="st">### ANOVA for'</span>, trait, <span class="st">'by Continent ###</span><span class="sc">\n\n</span><span class="st">'</span>)</span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Group means</span></span>
-<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>    means <span class="ot">&lt;-</span> bigfive_sample <span class="sc">%&gt;%</span></span>
-<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>        <span class="fu">group_by</span>(continent) <span class="sc">%&gt;%</span></span>
-<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>        <span class="fu">summarize</span>(</span>
-<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>            <span class="at">mean =</span> <span class="fu">mean</span>(.data[[trait]], <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(means)</span>
-<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># ANOVA</span></span>
-<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>    model <span class="ot">&lt;-</span> <span class="fu">aov</span>(<span class="fu">as.formula</span>(<span class="fu">paste</span>(trait, <span class="st">'~ continent'</span>)), <span class="at">data =</span> bigfive_sample)</span>
-<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span> (<span class="fu">summary</span>(model))</span>
-<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Tukey HSD</span></span>
-<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cat</span>(<span class="st">'</span><span class="sc">\n</span><span class="st">Tukey HSD:</span><span class="sc">\n</span><span class="st">'</span>)</span>
-<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(<span class="fu">TukeyHSD</span>(model))</span>
-<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># One-way ANOVA result in knitr::kable:</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit ANOVA model</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>openness_anova <span class="ot">&lt;-</span> <span class="fu">aov</span>(Openness <span class="sc">~</span> continent, <span class="at">data =</span> bigfive_sample)</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Tidy ANOVA result</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>anova_tidy <span class="ot">&lt;-</span> <span class="fu">tidy</span>(openness_anova)</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Display in table</span></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>  anova_tidy,</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">caption =</span> <span class="st">"Table 1. One-way ANOVA for Openness by Continent"</span>,</span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">digits =</span> <span class="dv">4</span></span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Table 1. One-way ANOVA for Openness by Continent</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">term</th>
+<th style="text-align: right;">df</th>
+<th style="text-align: right;">sumsq</th>
+<th style="text-align: right;">meansq</th>
+<th style="text-align: right;">statistic</th>
+<th style="text-align: right;">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">continent</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">6.2662</td>
+<td style="text-align: right;">1.5666</td>
+<td style="text-align: right;">11.7464</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Residuals</td>
+<td style="text-align: right;">4835</td>
+<td style="text-align: right;">644.8236</td>
+<td style="text-align: right;">0.1334</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Tukey HSD in knitr::kable:</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>openness_tukey <span class="ot">&lt;-</span> <span class="fu">TukeyHSD</span>(openness_anova)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert to dataframe</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>tukey_df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(openness_tukey<span class="sc">$</span>continent)</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Add comparison pair as a column</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>tukey_df<span class="sc">$</span>comparison <span class="ot">&lt;-</span> <span class="fu">rownames</span>(tukey_df)</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Reorder columns for clarity</span></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>tukey_df <span class="ot">&lt;-</span> tukey_df <span class="sc">%&gt;%</span></span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(comparison, diff, lwr, upr, <span class="st">`</span><span class="at">p adj</span><span class="st">`</span>)</span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Display nicely</span></span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(</span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>  tukey_df,</span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">caption =</span> <span class="st">"Table 2. Tukey HSD Post-Hoc Test for Openness by Continent"</span>,</span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">digits =</span> <span class="dv">4</span></span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Table 2. Tukey HSD Post-Hoc Test for Openness by Continent</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: left;">comparison</th>
+<th style="text-align: right;">diff</th>
+<th style="text-align: right;">lwr</th>
+<th style="text-align: right;">upr</th>
+<th style="text-align: right;">p adj</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">EU-AS</td>
+<td style="text-align: left;">EU-AS</td>
+<td style="text-align: right;">0.1330</td>
+<td style="text-align: right;">0.0777</td>
+<td style="text-align: right;">0.1884</td>
+<td style="text-align: right;">0.0000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">NA-AS</td>
+<td style="text-align: left;">NA-AS</td>
+<td style="text-align: right;">0.1090</td>
+<td style="text-align: right;">0.0593</td>
+<td style="text-align: right;">0.1588</td>
+<td style="text-align: right;">0.0000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">OC-AS</td>
+<td style="text-align: left;">OC-AS</td>
+<td style="text-align: right;">0.0939</td>
+<td style="text-align: right;">0.0198</td>
+<td style="text-align: right;">0.1680</td>
+<td style="text-align: right;">0.0050</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">SA-AS</td>
+<td style="text-align: left;">SA-AS</td>
+<td style="text-align: right;">0.1469</td>
+<td style="text-align: right;">0.0462</td>
+<td style="text-align: right;">0.2476</td>
+<td style="text-align: right;">0.0007</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">NA-EU</td>
+<td style="text-align: left;">NA-EU</td>
+<td style="text-align: right;">-0.0240</td>
+<td style="text-align: right;">-0.0598</td>
+<td style="text-align: right;">0.0117</td>
+<td style="text-align: right;">0.3545</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">OC-EU</td>
+<td style="text-align: left;">OC-EU</td>
+<td style="text-align: right;">-0.0391</td>
+<td style="text-align: right;">-0.1046</td>
+<td style="text-align: right;">0.0264</td>
+<td style="text-align: right;">0.4777</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">SA-EU</td>
+<td style="text-align: left;">SA-EU</td>
+<td style="text-align: right;">0.0138</td>
+<td style="text-align: right;">-0.0807</td>
+<td style="text-align: right;">0.1084</td>
+<td style="text-align: right;">0.9947</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">OC-NA</td>
+<td style="text-align: left;">OC-NA</td>
+<td style="text-align: right;">-0.0151</td>
+<td style="text-align: right;">-0.0759</td>
+<td style="text-align: right;">0.0457</td>
+<td style="text-align: right;">0.9611</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">SA-NA</td>
+<td style="text-align: left;">SA-NA</td>
+<td style="text-align: right;">0.0378</td>
+<td style="text-align: right;">-0.0535</td>
+<td style="text-align: right;">0.1292</td>
+<td style="text-align: right;">0.7906</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">SA-OC</td>
+<td style="text-align: left;">SA-OC</td>
+<td style="text-align: right;">0.0530</td>
+<td style="text-align: right;">-0.0536</td>
+<td style="text-align: right;">0.1596</td>
+<td style="text-align: right;">0.6559</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Looping for all traits</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>traits <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">'Openness'</span>, <span class="st">'Conscientiousness'</span>, <span class="st">'Extraversion'</span>, <span class="st">'Agreeableness'</span>, <span class="st">'Neuroticism'</span>)</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (trait <span class="cf">in</span> traits) {</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cat</span>(<span class="st">'</span><span class="sc">\n\n</span><span class="st">### ANOVA for'</span>, trait, <span class="st">'by Continent ###</span><span class="sc">\n\n</span><span class="st">'</span>)</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Group means</span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>    means <span class="ot">&lt;-</span> bigfive_sample <span class="sc">%&gt;%</span></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>        <span class="fu">group_by</span>(continent) <span class="sc">%&gt;%</span></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>        <span class="fu">summarize</span>(</span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>            <span class="at">mean =</span> <span class="fu">mean</span>(.data[[trait]], <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(means)</span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># ANOVA</span></span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>    model <span class="ot">&lt;-</span> <span class="fu">aov</span>(<span class="fu">as.formula</span>(<span class="fu">paste</span>(trait, <span class="st">'~ continent'</span>)), <span class="at">data =</span> bigfive_sample)</span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span> (<span class="fu">summary</span>(model))</span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Tukey HSD</span></span>
+<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cat</span>(<span class="st">'</span><span class="sc">\n</span><span class="st">Tukey HSD:</span><span class="sc">\n</span><span class="st">'</span>)</span>
+<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(<span class="fu">TukeyHSD</span>(model))</span>
+<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 
@@ -594,8 +796,232 @@ SA-OC -0.19285092 -0.380851976 -0.004849855 0.0410993</code></pre>
 </div>
 </div>
 </section>
-<section id="anova-result" class="level3">
-<h3 class="anchored" data-anchor-id="anova-result">ANOVA Result</h3>
+<section id="review-again-tomorrow-1" class="level4">
+<h4 class="anchored" data-anchor-id="review-again-tomorrow-1">Review again tomorrow</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>traits <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">'Openness'</span>, <span class="st">'Conscientiousness'</span>, <span class="st">'Extraversion'</span>, <span class="st">'Agreeableness'</span>, <span class="st">'Neuroticism'</span>)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (trait <span class="cf">in</span> traits) {</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">'</span><span class="sc">\n\n</span><span class="st">### ANOVA for'</span>, trait, <span class="st">'by Continent</span><span class="sc">\n\n</span><span class="st">'</span>)</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Group means</span></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>  means <span class="ot">&lt;-</span> bigfive_sample <span class="sc">%&gt;%</span></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(continent) <span class="sc">%&gt;%</span></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarize</span>(<span class="at">mean =</span> <span class="fu">mean</span>(.data[[trait]], <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(means)</span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>  <span class="co"># ANOVA</span></span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>  model <span class="ot">&lt;-</span> <span class="fu">aov</span>(<span class="fu">as.formula</span>(<span class="fu">paste</span>(trait, <span class="st">'~ continent'</span>)), <span class="at">data =</span> bigfive_sample)</span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>  tidy_anova <span class="ot">&lt;-</span> <span class="fu">tidy</span>(model)</span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(</span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a>    knitr<span class="sc">::</span><span class="fu">kable</span>(</span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a>      tidy_anova,</span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a>      <span class="at">caption =</span> <span class="fu">paste</span>(<span class="st">'Table: ANOVA for'</span>, trait),</span>
+<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a>      <span class="at">digits =</span> <span class="dv">4</span></span>
+<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb24-22"><a href="#cb24-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-23"><a href="#cb24-23" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Tukey HSD</span></span>
+<span id="cb24-24"><a href="#cb24-24" aria-hidden="true" tabindex="-1"></a>  tukey <span class="ot">&lt;-</span> <span class="fu">TukeyHSD</span>(model)</span>
+<span id="cb24-25"><a href="#cb24-25" aria-hidden="true" tabindex="-1"></a>  tukey_df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(tukey<span class="sc">$</span>continent)</span>
+<span id="cb24-26"><a href="#cb24-26" aria-hidden="true" tabindex="-1"></a>  tukey_df<span class="sc">$</span>comparison <span class="ot">&lt;-</span> <span class="fu">rownames</span>(tukey_df)</span>
+<span id="cb24-27"><a href="#cb24-27" aria-hidden="true" tabindex="-1"></a>  tukey_df <span class="ot">&lt;-</span> tukey_df <span class="sc">%&gt;%</span></span>
+<span id="cb24-28"><a href="#cb24-28" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(comparison, diff, lwr, upr, <span class="st">`</span><span class="at">p adj</span><span class="st">`</span>)</span>
+<span id="cb24-29"><a href="#cb24-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(</span>
+<span id="cb24-30"><a href="#cb24-30" aria-hidden="true" tabindex="-1"></a>    knitr<span class="sc">::</span><span class="fu">kable</span>(</span>
+<span id="cb24-31"><a href="#cb24-31" aria-hidden="true" tabindex="-1"></a>      tukey_df,</span>
+<span id="cb24-32"><a href="#cb24-32" aria-hidden="true" tabindex="-1"></a>      <span class="at">caption =</span> <span class="fu">paste</span>(<span class="st">'Table: Tukey HSD for'</span>, trait),</span>
+<span id="cb24-33"><a href="#cb24-33" aria-hidden="true" tabindex="-1"></a>      <span class="at">digits =</span> <span class="dv">4</span></span>
+<span id="cb24-34"><a href="#cb24-34" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb24-35"><a href="#cb24-35" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb24-36"><a href="#cb24-36" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+
+### ANOVA for Openness by Continent
+
+# A tibble: 5 × 2
+  continent  mean
+  &lt;chr&gt;     &lt;dbl&gt;
+1 AS         3.22
+2 EU         3.35
+3 NA         3.32
+4 OC         3.31
+5 SA         3.36
+
+
+Table: Table: ANOVA for Openness
+
+|term      |   df|    sumsq| meansq| statistic| p.value|
+|:---------|----:|--------:|------:|---------:|-------:|
+|continent |    4|   6.2662| 1.5666|   11.7464|       0|
+|Residuals | 4835| 644.8236| 0.1334|        NA|      NA|
+
+
+Table: Table: Tukey HSD for Openness
+
+|      |comparison |    diff|     lwr|    upr|  p adj|
+|:-----|:----------|-------:|-------:|------:|------:|
+|EU-AS |EU-AS      |  0.1330|  0.0777| 0.1884| 0.0000|
+|NA-AS |NA-AS      |  0.1090|  0.0593| 0.1588| 0.0000|
+|OC-AS |OC-AS      |  0.0939|  0.0198| 0.1680| 0.0050|
+|SA-AS |SA-AS      |  0.1469|  0.0462| 0.2476| 0.0007|
+|NA-EU |NA-EU      | -0.0240| -0.0598| 0.0117| 0.3545|
+|OC-EU |OC-EU      | -0.0391| -0.1046| 0.0264| 0.4777|
+|SA-EU |SA-EU      |  0.0138| -0.0807| 0.1084| 0.9947|
+|OC-NA |OC-NA      | -0.0151| -0.0759| 0.0457| 0.9611|
+|SA-NA |SA-NA      |  0.0378| -0.0535| 0.1292| 0.7906|
+|SA-OC |SA-OC      |  0.0530| -0.0536| 0.1596| 0.6559|
+
+
+### ANOVA for Conscientiousness by Continent
+
+# A tibble: 5 × 2
+  continent  mean
+  &lt;chr&gt;     &lt;dbl&gt;
+1 AS         3.14
+2 EU         3.11
+3 NA         3.16
+4 OC         3.08
+5 SA         3.17
+
+
+Table: Table: ANOVA for Conscientiousness
+
+|term      |   df|    sumsq| meansq| statistic| p.value|
+|:---------|----:|--------:|------:|---------:|-------:|
+|continent |    4|   2.9218| 0.7305|    5.2751|   3e-04|
+|Residuals | 4835| 669.5119| 0.1385|        NA|      NA|
+
+
+Table: Table: Tukey HSD for Conscientiousness
+
+|      |comparison |    diff|     lwr|     upr|  p adj|
+|:-----|:----------|-------:|-------:|-------:|------:|
+|EU-AS |EU-AS      | -0.0307| -0.0871|  0.0258| 0.5736|
+|NA-AS |NA-AS      |  0.0155| -0.0352|  0.0662| 0.9200|
+|OC-AS |OC-AS      | -0.0628| -0.1383|  0.0127| 0.1548|
+|SA-AS |SA-AS      |  0.0227| -0.0799|  0.1253| 0.9744|
+|NA-EU |NA-EU      |  0.0462|  0.0097|  0.0826| 0.0050|
+|OC-EU |OC-EU      | -0.0321| -0.0989|  0.0346| 0.6827|
+|SA-EU |SA-EU      |  0.0534| -0.0430|  0.1497| 0.5547|
+|OC-NA |OC-NA      | -0.0783| -0.1403| -0.0163| 0.0052|
+|SA-NA |SA-NA      |  0.0072| -0.0859|  0.1004| 0.9996|
+|SA-OC |SA-OC      |  0.0855| -0.0231|  0.1941| 0.1999|
+
+
+### ANOVA for Extraversion by Continent
+
+# A tibble: 5 × 2
+  continent  mean
+  &lt;chr&gt;     &lt;dbl&gt;
+1 AS         3.09
+2 EU         2.99
+3 NA         3.03
+4 OC         3.02
+5 SA         2.96
+
+
+Table: Table: ANOVA for Extraversion
+
+|term      |   df|    sumsq| meansq| statistic| p.value|
+|:---------|----:|--------:|------:|---------:|-------:|
+|continent |    4|   3.6350| 0.9087|    8.1323|       0|
+|Residuals | 4835| 540.2897| 0.1117|        NA|      NA|
+
+
+Table: Table: Tukey HSD for Extraversion
+
+|      |comparison |    diff|     lwr|     upr|  p adj|
+|:-----|:----------|-------:|-------:|-------:|------:|
+|EU-AS |EU-AS      | -0.0935| -0.1442| -0.0428| 0.0000|
+|NA-AS |NA-AS      | -0.0541| -0.0996| -0.0085| 0.0106|
+|OC-AS |OC-AS      | -0.0648| -0.1326|  0.0030| 0.0693|
+|SA-AS |SA-AS      | -0.1328| -0.2249| -0.0406| 0.0008|
+|NA-EU |NA-EU      |  0.0394|  0.0067|  0.0721| 0.0090|
+|OC-EU |OC-EU      |  0.0287| -0.0312|  0.0887| 0.6865|
+|SA-EU |SA-EU      | -0.0393| -0.1258|  0.0473| 0.7290|
+|OC-NA |OC-NA      | -0.0107| -0.0664|  0.0450| 0.9849|
+|SA-NA |SA-NA      | -0.0787| -0.1624|  0.0050| 0.0767|
+|SA-OC |SA-OC      | -0.0680| -0.1656|  0.0296| 0.3164|
+
+
+### ANOVA for Agreeableness by Continent
+
+# A tibble: 5 × 2
+  continent  mean
+  &lt;chr&gt;     &lt;dbl&gt;
+1 AS         3.27
+2 EU         3.13
+3 NA         3.16
+4 OC         3.15
+5 SA         3.12
+
+
+Table: Table: ANOVA for Agreeableness
+
+|term      |   df|    sumsq| meansq| statistic| p.value|
+|:---------|----:|--------:|------:|---------:|-------:|
+|continent |    4|   6.8718| 1.7180|   14.9299|       0|
+|Residuals | 4835| 556.3559| 0.1151|        NA|      NA|
+
+
+Table: Table: Tukey HSD for Agreeableness
+
+|      |comparison |    diff|     lwr|     upr|  p adj|
+|:-----|:----------|-------:|-------:|-------:|------:|
+|EU-AS |EU-AS      | -0.1422| -0.1936| -0.0907| 0.0000|
+|NA-AS |NA-AS      | -0.1095| -0.1557| -0.0633| 0.0000|
+|OC-AS |OC-AS      | -0.1157| -0.1845| -0.0469| 0.0000|
+|SA-AS |SA-AS      | -0.1454| -0.2389| -0.0519| 0.0002|
+|NA-EU |NA-EU      |  0.0327| -0.0005|  0.0659| 0.0565|
+|OC-EU |OC-EU      |  0.0265| -0.0343|  0.0873| 0.7577|
+|SA-EU |SA-EU      | -0.0032| -0.0911|  0.0846| 1.0000|
+|OC-NA |OC-NA      | -0.0061| -0.0626|  0.0503| 0.9983|
+|SA-NA |SA-NA      | -0.0359| -0.1208|  0.0490| 0.7779|
+|SA-OC |SA-OC      | -0.0297| -0.1287|  0.0693| 0.9248|
+
+
+### ANOVA for Neuroticism by Continent
+
+# A tibble: 5 × 2
+  continent  mean
+  &lt;chr&gt;     &lt;dbl&gt;
+1 AS         2.82
+2 EU         2.91
+3 NA         2.99
+4 OC         2.97
+5 SA         2.78
+
+
+Table: Table: ANOVA for Neuroticism
+
+|term      |   df|     sumsq| meansq| statistic| p.value|
+|:---------|----:|---------:|------:|---------:|-------:|
+|continent |    4|   19.3885| 4.8471|   11.6854|       0|
+|Residuals | 4835| 2005.5627| 0.4148|        NA|      NA|
+
+
+Table: Table: Tukey HSD for Neuroticism
+
+|      |comparison |    diff|     lwr|     upr|  p adj|
+|:-----|:----------|-------:|-------:|-------:|------:|
+|EU-AS |EU-AS      |  0.0950| -0.0026|  0.1926| 0.0611|
+|NA-AS |NA-AS      |  0.1779|  0.0902|  0.2656| 0.0000|
+|OC-AS |OC-AS      |  0.1533|  0.0227|  0.2839| 0.0120|
+|SA-AS |SA-AS      | -0.0395| -0.2171|  0.1381| 0.9740|
+|NA-EU |NA-EU      |  0.0829|  0.0199|  0.1459| 0.0031|
+|OC-EU |OC-EU      |  0.0583| -0.0572|  0.1738| 0.6419|
+|SA-EU |SA-EU      | -0.1345| -0.3013|  0.0323| 0.1794|
+|OC-NA |OC-NA      | -0.0246| -0.1318|  0.0827| 0.9711|
+|SA-NA |SA-NA      | -0.2174| -0.3786| -0.0563| 0.0022|
+|SA-OC |SA-OC      | -0.1929| -0.3809| -0.0048| 0.0411|</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="anova-result-review-later" class="level3">
+<h3 class="anchored" data-anchor-id="anova-result-review-later">ANOVA Result (Review later)</h3>
 <section id="openness" class="level4">
 <h4 class="anchored" data-anchor-id="openness">Openness:</h4>
 <p>ANOVA: F = 11.75, p &lt; .001 → significant overall difference.</p>
