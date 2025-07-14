@@ -5,12 +5,14 @@ format: html
 execute: 
     echo: true
 ---
+# Work Notebook
 ```{r}
 # Import libraries
 library(tidyverse)
 library(broom)
 bigfive <- read_csv('./data/cleaned/cleaned_bigfive_v1.csv')
-
+```
+```{r}
 # filtering for NA and NONE
 bigfive_filtered <- bigfive %>%
     filter(!is.na(country) & country != 'NONE')
@@ -23,6 +25,7 @@ bigfive_filtered %>%
 
 ```{r}
 # created a CSV file summarizing the name, row count, geographical and cultural location of all 220 countries present (after filtered for NA and NONE)
+# note: other - antarctica 
 country_info <- read_csv('./data/cleaned/country_names_220.csv')
 
 # show unique continents
@@ -53,52 +56,165 @@ country_info %>%
 
 ```
 ```{r}
-# Grouping by continent:
-# put russia in europe, put turkey in asia, and caribbean countries into south america
-library(dplyr)
+# merging country info 
+bigfive_merged <- bigfive_filtered %>%
+  left_join(country_info, by = c('country' = 'country_code'))
 
-bigfive_continent <- bigfive_filtered %>%
-  mutate(continent = case_when(
-    # North America (mainland + Central America only)
-    country %in% c("US", "CA", "MX", "PR", "HN", "NI", "CR", "PA", "GT", "SV") ~ "North America",
-    
-    # South America (+ Caribbean islands grouped here)
-    country %in% c(
-      "BR", "AR", "CO", "CL", "PE", "VE", "UY", "DO", "EC", "GY", "SR", "BO", "PY",
-      "BZ", "JM", "TT", "GD", "AG", "BS", "CU", "DM", "KN", "LC", "VC", "HT", "BB", "CW", "KY", "AW", "SX", "MQ", "GP", "BM"
-    ) ~ "South America",
-    
-    # Europe (+ Russia)
-    country %in% c(
-      "GB", "IE", "IS", "NO", "SE", "FI", "DK", "NL", "FR", "DE", "IT", "ES", "PL", "PT", "BE", "AT", "CH", "LU", "MT",
-      "RU", "UA", "RS", "RO", "BG", "GR", "GE", "CY", "MK", "ME", "MD", "AM", "BY",
-      "CZ", "HU", "SK", "SI", "HR", "AL", "BA", "LT", "LV", "EE",
-      "LI", "MC", "SM", "GG", "JE", "IM", "FO", "AX", "XK", "AD"
-    ) ~ "Europe",
-    
-    # Asia (+ Turkey)
-    country %in% c(
-      "IN", "PK", "BD", "LK", "NP", "MV", "CN", "HK", "JP", "KR", "TW", "SG", "MY", "PH", "VN", "TH", "KH", "ID", "BN", "LA",
-      "MM", "TL", "PG", "MN", "KZ", "KG", "UZ", "AZ", "IL", "IQ", "SY", "IR", "JO", "LB", "PS", "YE", "SA", "AE", "KW", "QA",
-      "BH", "OM", "MO", "TR"
-    ) ~ "Asia",
-    
-    # Africa
-    country %in% c(
-      "ZA", "KE", "NG", "GH", "ZM", "UG", "SD", "ZW", "ET", "DZ", "MA", "TZ", "RW", "CM", "AO", "MW", "MZ", "SN", "SZ",
-      "LS", "BI", "BF", "BJ", "GM", "GN", "CI", "CV", "GQ", "KM", "MG", "MR", "NE", "SL", "TG", "TD", "CD", "DJ", "CG", "GA",
-      "SS", "EG", "LY"
-    ) ~ "Africa",
-    
-    # Oceania
-    country %in% c("AU", "NZ", "FJ", "WS", "VU", "CK", "FM", "PW", "PG", "TO", "TL", "MP", "GU", "NC", "MH", "NU") ~ "Oceania",
-    
-    # Other / Unclassified
-    TRUE ~ "Other"
-  ))
+summary(bigfive_merged$continent)
+summary(bigfive_merged$cultural_group)
+```
+```{r}
+# Continent-level ANOVA
+# filter Other (Antarctica) for low N
+bigfive_merged <- bigfive_merged %>%
+  filter (continent != 'Other')
+bigfive_merged %>%
+  count(continent, sort = TRUE)
 
+# ANOVA for Openness by Continent
+anova_O <- aov(Openness ~ continent, data = bigfive_merged)
+summary(anova_O)
 
-  bigfive_continent %>%
-  count(continent) %>%
-  arrange(desc(n))
+# post-hoc Tukey HSD
+tukey_O <- TukeyHSD(anova_O)
+tukey_O
 
+# Visualization
+bigfive_merged %>%
+  group_by(continent) %>%
+  mutate(mean_O = mean(Openness)) %>%
+  ggplot(aes(x = continent, y = Openness)) +
+  geom_boxplot(fill = 'lightblue') +
+  stat_summary(fun = mean, geom = 'point', shape = 20, size = 3, color = 'red') +
+  labs(title = 'Openness by Continent', y = 'Openness Score (1-5)', x = 'Continent') +
+  theme_minimal()
+```
+```{r}
+traits <- c('Openness', 'Conscientiousness', 'Extraversion', 'Agreeableness', 'Neuroticism')
+
+anova_results <- list()
+tukey_results <- list()
+
+for (trait in traits) {
+  formula <- as.formula(paste(trait, '~ continent'))
+
+  model <- aov(formula, data = bigfive_merged)
+  anova_results[[trait]] <- summary(model)
+
+  tukey <- TukeyHSD(model)
+  tukey_results[[trait]] <- tukey
+}
+
+anova_results[['Openness']]
+tukey_results[['Openness']]
+
+anova_results[['Conscientiousness']]
+tukey_results[['Conscientiousness']]
+
+anova_results[['Extraversion']]
+tukey_results[['Extraversion']]
+
+anova_results[['Agreeableness']]
+tukey_results[['Agreeableness']]
+
+anova_results[['Neuroticism']]
+tukey_results[['Neuroticism']]
+
+```
+```{r}
+# Loop through each trait and plot
+for (trait in traits) {
+  p <- ggplot(bigfive_merged, 
+              aes(x = continent, y = .data[[trait]], fill = continent)) +
+    geom_violin(alpha = 0.7, trim = FALSE, bw = 0.3) +
+    geom_boxplot(width = 0.1, fill = "white", outlier.shape = NA) +
+    labs(title = paste("Distribution of", trait, "by Continent"),
+         x = "Continent", y = trait) +
+    theme_minimal() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+    scale_fill_brewer(palette = "Set2")
+  
+  print(p)
+}
+```
+
+# Final Continent-level and Cultrual Group-level Analyses 
+```{r}
+library(tidyverse)
+library(broom)
+
+# Load data
+bigfive <- read_csv('./data/cleaned/cleaned_bigfive_v1.csv')
+country_info <- read_csv('./data/cleaned/country_names_220.csv')
+
+# Merge country info, filter out "Other" (Antarctica)
+bigfive_merged <- bigfive %>%
+  filter(!is.na(country) & country != 'NONE') %>%
+  left_join(country_info, by = c('country' = 'country_code')) %>%
+  filter(continent != "Other")
+
+traits <- c('Openness', 'Conscientiousness', 'Extraversion', 'Agreeableness', 'Neuroticism')
+anova_results_continent <- list()
+tukey_results_continent <- list()
+
+for (trait in traits) {
+  formula <- as.formula(paste(trait, "~ continent"))
+  model <- aov(formula, data = bigfive_merged)
+  anova_results_continent[[trait]] <- summary(model)
+  tukey_results_continent[[trait]] <- TukeyHSD(model)
+}
+
+# Example output
+anova_results_continent[['Openness']]
+tukey_results_continent[['Openness']]
+```
+```{r}
+for (trait in traits) {
+  p <- ggplot(bigfive_merged, 
+              aes(x = continent, y = .data[[trait]], fill = continent)) +
+    geom_violin(trim = FALSE, alpha = 0.7, bw = 0.3) +
+    geom_boxplot(width = 0.1, fill = "white", outlier.shape = NA) +
+    labs(title = paste("Distribution of", trait, "by Continent"),
+         x = "Continent", y = trait) +
+    theme_minimal() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+    scale_fill_brewer(palette = "Set2")
+  
+  print(p)
+}
+```
+```{r}
+# Filter cultural groups with valid labels (optional)
+bigfive_cultural <- bigfive_merged %>%
+  filter(!is.na(cultural_group))
+
+anova_results_cultural <- list()
+tukey_results_cultural <- list()
+
+for (trait in traits) {
+  formula <- as.formula(paste(trait, "~ cultural_group"))
+  model <- aov(formula, data = bigfive_cultural)
+  anova_results_cultural[[trait]] <- summary(model)
+  tukey_results_cultural[[trait]] <- TukeyHSD(model)
+}
+
+# Example output
+anova_results_cultural[['Openness']]
+tukey_results_cultural[['Openness']]
+```
+```{r}
+for (trait in traits) {
+  p <- ggplot(bigfive_cultural, 
+              aes(x = cultural_group, y = .data[[trait]], fill = cultural_group)) +
+    geom_violin(trim = FALSE, alpha = 0.7, bw = 0.3) +
+    geom_boxplot(width = 0.1, fill = "white", outlier.shape = NA) +
+    labs(title = paste("Distribution of", trait, "by Cultural Group"),
+         x = "Cultural Group", y = trait) +
+    theme_minimal() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 9)) +
+    scale_fill_manual(values = rep_len(RColorBrewer::brewer.pal(8, "Set3"), 
+                                       length(unique(bigfive_cultural$cultural_group))))
+  
+  print(p)
+}
+```

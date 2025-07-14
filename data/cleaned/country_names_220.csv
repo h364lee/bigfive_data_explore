@@ -10,9 +10,9 @@ index,country_code,country_name,row_count,continent,cultural_group
 9,NO,Norway,7133,Europe,Protestant Europe
 10,NL,Netherlands,6910,Europe,Protestant Europe
 11,SE,Sweden,6524,Europe,Protestant Europe
-12,MY,Malaysia,6329,Asia,Other Asia
+12,MY,Malaysia,6329,Asia,Hybrid Asia
 13,NZ,New Zealand,5751,Oceania,English-speaking
-14,ID,Indonesia,4927,Asia,Other Asia
+14,ID,Indonesia,4927,Asia,Hybrid Asia
 15,SG,Singapore,4792,Asia,Confucian
 16,BR,Brazil,4767,South America,Latin America
 17,FR,France,4497,Europe,Catholic Europe
@@ -38,11 +38,11 @@ index,country_code,country_name,row_count,continent,cultural_group
 37,AT,Austria,1717,Europe,Catholic Europe
 38,CL,Chile,1707,South America,Latin America
 39,HR,Croatia,1643,Europe,Catholic Europe
-40,VN,Viet Nam,1471,Asia,Other Asia
+40,VN,Viet Nam,1471,Asia,Hybrid Asia
 41,RS,Serbia,1431,Europe,Orthodox Europe
 42,JP,Japan,1416,Asia,Confucian
 43,CZ,Czechia,1363,Europe,Catholic Europe
-44,TH,Thailand,1362,Asia,Other Asia
+44,TH,Thailand,1362,Asia,Hybrid Asia
 45,PE,Peru,1295,South America,Latin America
 46,HU,Hungary,1169,Europe,Catholic Europe
 47,KR,"Korea, Republic of",1156,Asia,Confucian
@@ -78,7 +78,7 @@ index,country_code,country_name,row_count,continent,cultural_group
 77,KW,Kuwait,289,Asia,Islamic
 78,MT,Malta,288,Europe,Catholic Europe
 79,BO,"Bolivia, Plurinational State of",280,South America,Latin America
-80,KZ,Kazakhstan,274,Asia,Other Asia
+80,KZ,Kazakhstan,274,Asia,Hybrid Asia
 81,MK,North Macedonia,272,Europe,Orthodox Europe
 82,JO,Jordan,267,Asia,Islamic
 83,UY,Uruguay,264,South America,Latin America
@@ -89,9 +89,9 @@ index,country_code,country_name,row_count,continent,cultural_group
 88,BD,Bangladesh,201,Asia,South Asia
 89,DZ,Algeria,192,Africa,Islamic
 90,PY,Paraguay,189,South America,Latin America
-91,KH,Cambodia,186,Asia,Other Asia
+91,KH,Cambodia,186,Asia,Hybrid Asia
 92,GH,Ghana,167,Africa,Sub-Saharan Africa
-93,BN,Brunei Darussalam,166,Asia,Other Asia
+93,BN,Brunei Darussalam,166,Asia,Hybrid Asia
 94,LU,Luxembourg,164,Europe,Catholic Europe
 95,BH,Bahrain,160,Asia,Islamic
 96,PA,Panama,159,North America,Latin America
@@ -116,29 +116,29 @@ index,country_code,country_name,row_count,continent,cultural_group
 115,UG,Uganda,70,Africa,Sub-Saharan Africa
 116,SD,Sudan,69,Africa,Islamic
 117,ZW,Zimbabwe,69,Africa,Sub-Saharan Africa
-118,MM,Myanmar,65,Asia,Other Asia
+118,MM,Myanmar,65,Asia,Hybrid Asia
 119,TZ,"Tanzania, United Republic of",64,Africa,Sub-Saharan Africa
-120,AZ,Azerbaijan,63,Asia,Other Asia
+120,AZ,Azerbaijan,63,Asia,Hybrid Asia
 121,SY,Syrian Arab Republic,60,Asia,Islamic
 122,MV,Maldives,59,Asia,South Asia
-123,MN,Mongolia,55,Asia,Other Asia
+123,MN,Mongolia,55,Asia,Hybrid Asia
 124,PS,Palestine,55,Asia,Middle East
 125,BW,Botswana,52,Africa,Sub-Saharan Africa
 126,JE,Jersey,51,Europe,Protestant Europe
 127,KY,Cayman Islands,44,South America,Latin America
 128,AF,Afghanistan,41,Asia,South Asia
 129,IM,Isle of Man,41,Europe,Protestant Europe
-130,LA,Lao People's Democratic Republic,39,Asia,Other Asia
+130,LA,Lao People's Democratic Republic,39,Asia,Hybrid Asia
 131,CW,Curaçao,35,South America,Latin America
-132,KG,Kyrgyzstan,35,Asia,Other Asia
+132,KG,Kyrgyzstan,35,Asia,Hybrid Asia
 133,GG,Guernsey,33,Europe,Protestant Europe
 134,SR,Suriname,33,South America,Latin America
 135,BM,Bermuda,32,South America,Latin America
 136,AW,Aruba,28,South America,Latin America
 137,LY,Libya,27,Africa,Islamic
-138,FJ,Fiji,26,Oceania,Other Oceania
+138,FJ,Fiji,26,Oceania,Pacific Islands
 139,GY,Guyana,26,South America,Latin America
-140,UZ,Uzbekistan,25,Asia,Other Asia
+140,UZ,Uzbekistan,25,Asia,Hybrid Asia
 141,RW,Rwanda,24,Africa,Sub-Saharan Africa
 142,CM,Cameroon,23,Africa,Sub-Saharan Africa
 143,FO,Faroe Islands,23,Europe,Protestant Europe
@@ -151,7 +151,7 @@ index,country_code,country_name,row_count,continent,cultural_group
 150,LC,Saint Lucia,16,South America,Latin America
 151,GD,Grenada,15,South America,Latin America
 152,GL,Greenland,14,Europe,Protestant Europe
-153,PG,Papua New Guinea,14,Oceania,Other Oceania
+153,PG,Papua New Guinea,14,Oceania,Pacific Islands
 154,VC,Saint Vincent and the Grenadines,14,South America,Latin America
 155,AX,Åland Islands,13,Europe,Protestant Europe
 156,SO,Somalia,13,Africa,Sub-Saharan Africa
@@ -169,42 +169,42 @@ index,country_code,country_name,row_count,continent,cultural_group
 168,CI,Côte d'Ivoire,7,Africa,Sub-Saharan Africa
 169,CU,Cuba,7,South America,Latin America
 170,GM,Gambia,7,Africa,Sub-Saharan Africa
-171,PF,French Polynesia,7,Oceania,Other Oceania
-172,WS,Samoa,7,Oceania,Other Oceania
+171,PF,French Polynesia,7,Oceania,Pacific Islands
+172,WS,Samoa,7,Oceania,Pacific Islands
 173,RE,Réunion,6,Africa,Sub-Saharan Africa
-174,VU,Vanuatu,6,Oceania,Other Oceania
+174,VU,Vanuatu,6,Oceania,Pacific Islands
 175,CV,Cabo Verde,5,Africa,Sub-Saharan Africa
 176,LR,Liberia,5,Africa,Sub-Saharan Africa
-177,MP,Northern Mariana Islands,5,Oceania,Other Oceania
+177,MP,Northern Mariana Islands,5,Oceania,Pacific Islands
 178,MQ,Martinique,5,South America,Latin America
 179,SL,Sierra Leone,5,Africa,Sub-Saharan Africa
 180,TC,Turks and Caicos Islands,5,South America,Latin America
-181,TL,Timor-Leste,5,Asia,Other Asia
-182,TO,Tonga,5,Oceania,Other Oceania
+181,TL,Timor-Leste,5,Asia,Hybrid Asia
+182,TO,Tonga,5,Oceania,Pacific Islands
 183,XK,Kosovo,5,Europe,Orthodox Europe
-184,CK,Cook Islands,4,Oceania,Other Oceania
-185,FM,"Micronesia, Federated States of",4,Oceania,Other Oceania
+184,CK,Cook Islands,4,Oceania,Pacific Islands
+185,FM,"Micronesia, Federated States of",4,Oceania,Pacific Islands
 186,GP,Guadeloupe,4,South America,Latin America
 187,LI,Liechtenstein,4,Europe,Catholic Europe
 188,MC,Monaco,4,Europe,Catholic Europe
-189,NC,New Caledonia,4,Oceania,Other Oceania
+189,NC,New Caledonia,4,Oceania,Pacific Islands
 190,SX,Sint Maarten,4,South America,Latin America
 191,AI,Anguilla,3,South America,Latin America
 192,CG,Congo,3,Africa,Sub-Saharan Africa
 193,GA,Gabon,3,Africa,Sub-Saharan Africa
 194,MR,Mauritania,3,Africa,Islamic
-195,PW,Palau,3,Oceania,Other Oceania
+195,PW,Palau,3,Oceania,Pacific Islands
 196,SS,South Sudan,3,Africa,Sub-Saharan Africa
 197,AQ,Antarctica,2,Other,Other
 198,CD,"Congo, The Democratic Republic of the",2,Africa,Sub-Saharan Africa
 199,DJ,Djibouti,2,Africa,Islamic
 200,ML,Mali,2,Africa,Sub-Saharan Africa
-201,NU,Niue,2,Oceania,Other Oceania
+201,NU,Niue,2,Oceania,Pacific Islands
 202,SM,San Marino,2,Europe,Catholic Europe
 203,TG,Togo,2,Africa,Sub-Saharan Africa
-204,TJ,Tajikistan,2,Asia,Other Asia
+204,TJ,Tajikistan,2,Asia,Hybrid Asia
 205,VG,"Virgin Islands, British",2,South America,Latin America
-206,AS,American Samoa,1,Oceania,Other Oceania
+206,AS,American Samoa,1,Oceania,Pacific Islands
 207,BF,Burkina Faso,1,Africa,Sub-Saharan Africa
 208,BI,Burundi,1,Africa,Sub-Saharan Africa
 209,BJ,Benin,1,Africa,Sub-Saharan Africa
@@ -215,7 +215,7 @@ index,country_code,country_name,row_count,continent,cultural_group
 214,GQ,Equatorial Guinea,1,Africa,Sub-Saharan Africa
 215,KM,Comoros,1,Africa,Sub-Saharan Africa
 216,MF,Saint Martin,1,South America,Latin America
-217,MH,Marshall Islands,1,Oceania,Other Oceania
+217,MH,Marshall Islands,1,Oceania,Pacific Islands
 218,NE,Niger,1,Africa,Sub-Saharan Africa
 219,SH,"Saint Helena, Ascension and Tristan da Cunha",1,Africa,Sub-Saharan Africa
 220,TD,Chad,1,Africa,Sub-Saharan Africa
