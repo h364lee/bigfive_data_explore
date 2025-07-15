@@ -45,3 +45,20 @@
     - If the CI includes zero, you cannot reject the null hypothesis for that pair because zero difference is plausible.
 - If CI includes zero, 0 difference is possible. Thus, if your reject column says True but your CI includes zero, you should distrust the reject flag.
 - This can happen due to rounding in printed output (the real CI might barely miss zero by 0.0001)
+
+## Internal Consistency
+- how consistently the items within each trait measure the same underlying construct: internal consistency reliability
+### Cronbach's Alpha (α)
+- Estimates the reliability of a scale (the degree to which all items in a set measure the same latent trait)
+- Example: if a person scores high on one Extraversion item, they should score high on the others - α quantifies how consistently this holds.
+- Common interpretation: 
+    - α ≥ .90 → Excellent
+    - .80 ≤ α < .90 → Good
+    - .70 ≤ α < .80 → Acceptable
+    - .60 ≤ α < .70 → Questionable
+    - α < .60 → Poor
+### Item-Total Correlation
+- How well each item correlates with the sum of the remaining items: way to check item quality
+- Common interpretation: 
+    - r ≥ .30 → Acceptable
+    - r < .30 → Consider reviewing the item (it may be poorly worded or unrelated)

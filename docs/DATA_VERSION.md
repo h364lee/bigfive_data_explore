@@ -61,3 +61,18 @@ Run `notebooks/00_data_cleaning.ipynb` with raw CSV in `data/raw/`
         - Conscientiousness showed a small significant difference between South America and Asia
 - Documented the interpretations for each trait as draft Results text.
 - Tried how to display ANOVA and Tukey HSD results in knitr::kable format, but need to review it more tomorrow.
+
+## 2025-07-13
+- Group comparison in R (in qmd) with the whole dataset
+- Created two sets of groups: continent groups and culture groups
+- Ran ANOVA and TukeyHSD for the groups
+- Blockers: too many groups and datapoints led to errors in R when run, and the plots with bad interpretibility. 
+- Decided to move on to the next parts: Reliability analyses (Cronbach's alpha, item-total correlations), Correlation matrix and factor analyses, and cluster analysis. 
+
+## 2025-07-14
+- Reliability Analyses
+- Subset item-level responses by trait 
+- Calculated Cronbach's alpha for each trait using psych::alpha() with check.keys = TRUE for detecting reverse-coded items
+- Identified reverse-scored items using auto-detection
+- Created a summary table
+- REALIZED THAT I USED UNADJUSTED SCORES FOR PREVIOUS ANALYSES... I knew there are reverse-coded items but assumed their scores had been adjusted in the dataset. Need to re-run these analyses with corrected trait scores -> very positive because I might find something interesting from the group comparison if I use the corrected scores.

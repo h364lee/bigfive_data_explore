@@ -1,0 +1,109 @@
+--- 
+title: "Reliability Analysis"
+author: "Caleb Lee"
+format: html
+execute: 
+    echo: true
+---
+To investigates the psychometric structure of the Big Five Personality Inventory using empirical data. Aim is to assess the reliability, inter-item relationships, and latent structure of personality traits measured through the self-report items.
+
+```{r}
+# load libraries and data file
+library(tidyverse)
+library(psych)
+
+bigfive <- read_csv('./data/cleaned/cleaned_bigfive_v1.csv')
+```
+```{r}
+library(psych)
+```
+```{r}
+colnames(bigfive)
+```
+```{r}
+# Subset items for each trait
+opn_items <- bigfive %>% select(matches("^OPN[0-9]+$"))
+ext_items <- bigfive %>% select(matches("^EXT[0-9]+$"))
+agr_items <- bigfive %>% select(matches("^AGR[0-9]+$"))
+csn_items <- bigfive %>% select(matches("^CSN[0-9]+$"))
+nrt_items <- bigfive %>% select(matches("^NRT[0-9]+$"))
+```
+```{r}
+glimpse(opn_items)
+```
+```{r}
+alpha_opn <- alpha(opn_items)
+print(alpha_opn)
+```
+```{r}
+alpha_opn_checked <- alpha(opn_items, check.keys = TRUE)
+print(alpha_opn_checked)
+```
+```{r}
+# Compute alphas for all traits
+alpha_opn <- alpha(opn_items, check.keys = TRUE)
+alpha_ext <- alpha(ext_items, check.keys = TRUE)
+alpha_agr <- alpha(agr_items, check.keys = TRUE)
+alpha_csn <- alpha(csn_items, check.keys = TRUE)
+alpha_nrt <- alpha(nrt_items, check.keys = TRUE)
+
+# Build summary table
+alpha_summary <- tibble(
+  Trait = c("Openness", "Extraversion", "Agreeableness", "Conscientiousness", "Neuroticism"),
+  Alpha = c(alpha_opn$total$raw_alpha,
+            alpha_ext$total$raw_alpha,
+            alpha_agr$total$raw_alpha,
+            alpha_csn$total$raw_alpha,
+            alpha_nrt$total$raw_alpha),
+  Avg_Item_R = c(alpha_opn$total$average_r,
+                 alpha_ext$total$average_r,
+                 alpha_agr$total$average_r,
+                 alpha_csn$total$average_r,
+                 alpha_nrt$total$average_r),
+  Std_Alpha = c(alpha_opn$total$std.alpha,
+                alpha_ext$total$std.alpha,
+                alpha_agr$total$std.alpha,
+                alpha_csn$total$std.alpha,
+                alpha_nrt$total$std.alpha)
+)
+print(alpha_summary)
+```
+```{r}
+get_reversed_items <- function(alpha_result) {
+  keys <- unlist(alpha_result$keys)  # ensures we have a character vector
+  reversed_items <- keys[startsWith(keys, "-")]
+  reversed_items <- gsub("-", "", reversed_items)
+  return(reversed_items)
+}
+
+# summary table with reversed items
+alpha_summary <- tibble(
+  Trait = c("Openness", "Extraversion", "Agreeableness", "Conscientiousness", "Neuroticism"),
+  Alpha = c(alpha_opn$total$raw_alpha,
+            alpha_ext$total$raw_alpha,
+            alpha_agr$total$raw_alpha,
+            alpha_csn$total$raw_alpha,
+            alpha_nrt$total$raw_alpha),
+  Avg_Item_R = c(alpha_opn$total$average_r,
+                 alpha_ext$total$average_r,
+                 alpha_agr$total$average_r,
+                 alpha_csn$total$average_r,
+                 alpha_nrt$total$average_r),
+  Std_Alpha = c(alpha_opn$total$std.alpha,
+                alpha_ext$total$std.alpha,
+                alpha_agr$total$std.alpha,
+                alpha_csn$total$std.alpha,
+                alpha_nrt$total$std.alpha),
+  Reversed_Items = c(
+    paste(get_reversed_items(alpha_opn), collapse = ", "),
+    paste(get_reversed_items(alpha_ext), collapse = ", "),
+    paste(get_reversed_items(alpha_agr), collapse = ", "),
+    paste(get_reversed_items(alpha_csn), collapse = ", "),
+    paste(get_reversed_items(alpha_nrt), collapse = ", ")
+  )
+)
+
+library(knitr)
+kable(alpha_summary, digits = 3, caption = "Cronbach's Alpha and Reverse-Scored Items")
+
+```
