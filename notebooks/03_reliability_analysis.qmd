@@ -15,9 +15,7 @@ library(psych)
 bigfive <- read_csv('./data/cleaned/cleaned_bigfive_v1.csv')
 ```
 ```{r}
-library(psych)
-```
-```{r}
+# check variable names in the original data file
 colnames(bigfive)
 ```
 ```{r}
@@ -29,18 +27,22 @@ csn_items <- bigfive %>% select(matches("^CSN[0-9]+$"))
 nrt_items <- bigfive %>% select(matches("^NRT[0-9]+$"))
 ```
 ```{r}
+# check item subset
 glimpse(opn_items)
 ```
 ```{r}
+# reliability check (cronbach's alpha)
+# without checking for reversed items - first time
 alpha_opn <- alpha(opn_items)
 print(alpha_opn)
 ```
 ```{r}
+# cronbach's alpha with auto-detected reversed items - second time
 alpha_opn_checked <- alpha(opn_items, check.keys = TRUE)
 print(alpha_opn_checked)
 ```
 ```{r}
-# Compute alphas for all traits
+# Compute alphas for all traits (with reversed item checks)
 alpha_opn <- alpha(opn_items, check.keys = TRUE)
 alpha_ext <- alpha(ext_items, check.keys = TRUE)
 alpha_agr <- alpha(agr_items, check.keys = TRUE)
@@ -69,12 +71,15 @@ alpha_summary <- tibble(
 print(alpha_summary)
 ```
 ```{r}
+# identify reverse-scored items 
 get_reversed_items <- function(alpha_result) {
   keys <- unlist(alpha_result$keys)  # ensures we have a character vector
   reversed_items <- keys[startsWith(keys, "-")]
   reversed_items <- gsub("-", "", reversed_items)
   return(reversed_items)
 }
+# note: checked if the reversed items identified here are indeed reversed in the original questionniare -> yes
+# link: https://ipip.ori.org/new_ipip-50-item-scale.htm
 
 # summary table with reversed items
 alpha_summary <- tibble(

@@ -1,0 +1,141 @@
+--- 
+title: "Correlation Matrix Analysis"
+author: "Caleb Lee"
+format: html
+execute: 
+    echo: true
+---
+## Objective
+To explore the interrelationships among Big Five personality traits by computing and visualizing a correlation matrix based on reverse-scored trait scores.
+
+## 1. Load Libraries and Data
+```{r}
+library(tidyverse)
+library(psych)
+library(ggcorrplot)
+
+bigfive <- read_csv('./data/cleaned/cleaned_bigfive_v1.csv')
+```
+## 2. Identify Reverse Coded Items
+```{r}
+# running alpha() again to get reverse-scored items
+get_reversed_items <- function(alpha_result) {
+  keys <- unlist(alpha_result$keys)
+  reversed_items <- keys[startsWith(keys, "-")]
+  reversed_items <- gsub("-", "", reversed_items)
+  return(reversed_items)
+}
+
+opn_items <- bigfive %>% select(matches("^OPN[0-9]+$"))
+ext_items <- bigfive %>% select(matches("^EXT[0-9]+$"))
+agr_items <- bigfive %>% select(matches("^AGR[0-9]+$"))
+csn_items <- bigfive %>% select(matches("^CSN[0-9]+$"))
+nrt_items <- bigfive %>% select(matches("^NRT[0-9]+$"))
+
+
+alpha_opn <- alpha(opn_items, check.keys = TRUE)
+alpha_ext <- alpha(ext_items, check.keys = TRUE)
+alpha_agr <- alpha(agr_items, check.keys = TRUE)
+alpha_csn <- alpha(csn_items, check.keys = TRUE)
+alpha_nrt <- alpha(nrt_items, check.keys = TRUE)
+
+# reversed-item names
+reversed_opn <- get_reversed_items(alpha_opn)
+reversed_ext <- get_reversed_items(alpha_ext)
+reversed_agr <- get_reversed_items(alpha_agr)
+reversed_csn <- get_reversed_items(alpha_csn)
+reversed_nrt <- get_reversed_items(alpha_nrt)
+```
+```{r}
+# checking
+print(reversed_opn)
+```
+## 3. Applying Reverse Scoring
+```{r}
+# function to reverse code (-6) items
+reverse_score <- function(df, items_to_reverse) {
+    df %>% mutate(across(all_of(items_to_reverse), ~ 6 - .))
+}
+
+bigfive_scored <- bigfive %>%
+    reverse_score(reversed_opn) %>%
+    reverse_score(reversed_csn) %>%
+    reverse_score(reversed_ext) %>%
+    reverse_score(reversed_agr) %>%
+    reverse_score(reversed_nrt)
+
+```
+## 4. Calculate Trait Scores
+```{r}
+bigfive_scored <- bigfive_scored %>%
+    mutate(
+        Openness = rowMeans(select(., matches("^OPN[0-9]+$"))),
+        Conscientiousness = rowMeans(select(., matches("^CSN[0-9]+$"))),
+        Extraversion = rowMeans(select(., matches("^EXT[0-9]+$"))),
+        Agreeableness = rowMeans(select(., matches("^AGR[0-9]+$"))),
+        Neuroticism = rowMeans(select(., matches("^NRT[0-9]+$")))
+    )
+```
+## 5. Correlation Matrix (ggcorrplot)
+```{r}
+traits <- bigfive_scored %>%
+    select(Openness, Conscientiousness, Extraversion, Agreeableness, Neuroticism)
+
+cor_matrix <- cor(traits, use = 'pairwise.complete.obs', method = 'pearson')
+print(round(cor_matrix, 2))
+```
+## 6. Visualization
+```{r}
+ggcorrplot(cor_matrix, method = 'circle', type = 'upper', lab = TRUE, lab_size = 4, colors = c('blue', 'white', 'red'), title = 'Correlation Matrix: Big Five Traits', ggtheme = theme_minimal())
+```
+## 7. Test for Significance
+```{r}
+cor_test <- corr.test(traits, use = 'pairwise.complete.obs', method = 'pearson', adjust = 'holm')
+
+cor_test$r
+cor_test$p
+cor_test$p.adj
+
+round(cor_test$r, 2)       
+round(cor_test$p, 4)      
+round(cor_test$p.adj, 4) 
+
+# They are all strongly significant due to very large sample size (+602k)
+```
+### Correlation Matrix (corrplot)
+```{r}
+# Create a significance matrix (TRUE = p < .05)
+library(corrplot)
+
+corrplot(cor_test$r, 
+         method = "color", 
+         type = "upper", 
+         p.mat = cor_test$p, 
+         sig.level = 0.05, 
+         insig = "blank", 
+         addCoef.col = "black",
+         tl.col = "black", 
+         tl.srt = 45,
+         title = "Correlation Matrix: Big Five Traits")
+
+```
+## 8. Interpretation + Inline Stats
+```{r}
+# Extract rounded values for inline reporting
+n_used <- bigfive_scored %>%
+  select(Openness, Conscientiousness, Extraversion, Agreeableness, Neuroticism) %>%
+  drop_na() %>%
+  nrow()
+
+r_E_A <- round(cor_test$r["Extraversion", "Agreeableness"], 2)
+p_E_A <- "< .001"
+
+r_N_C <- round(cor_test$r["Neuroticism", "Conscientiousness"], 2)
+r_N_E <- round(cor_test$r["Neuroticism", "Extraversion"], 2)
+r_O_C <- round(cor_test$r["Openness", "Conscientiousness"], 2)
+r_O_E <- round(cor_test$r["Openness", "Extraversion"], 2)
+r_O_A <- round(cor_test$r["Openness", "Agreeableness"], 2)
+r_O_N <- round(cor_test$r["Openness", "Neuroticism"], 2)
+```
+
+A Pearson correlation matrix was computed among the Big Five personality traits. All correlations were statistically significant (*p* < .001) due to the large sample size (*N* = `r n_used`). Extraversion showed a moderate positive correlation with Agreeableness (*r* = `r r_E_A`, *p* `r p_E_A`). Neuroticism correlated positively with both Conscientiousness (*r* = `r r_N_C`, *p* < .001) and Extraversion (*r* = `r r_N_E`, *p* < .001). Other correlations were weak although significant, with Openness showing small positive associations with Conscientiousness (*r* = `r r_O_C`), Extraversion (*r* = `r r_O_E`), Agreeableness (*r* = `r r_O_A`), and Neuroticism (*r* = `r r_O_N`).

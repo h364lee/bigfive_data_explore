@@ -76,3 +76,13 @@ Run `notebooks/00_data_cleaning.ipynb` with raw CSV in `data/raw/`
 - Identified reverse-scored items using auto-detection
 - Created a summary table
 - REALIZED THAT I USED UNADJUSTED SCORES FOR PREVIOUS ANALYSES... I knew there are reverse-coded items but assumed their scores had been adjusted in the dataset. Need to re-run these analyses with corrected trait scores -> very positive because I might find something interesting from the group comparison if I use the corrected scores.
+
+## 2025-07-16
+- annotated reliability analyses file (03_reliability_analysis)
+- Recomputed alpha() with check.keys = TRUE to identify reverse-scored items
+- Created a reverse_score() function and applied it to the reverse-scored items
+- Comptuted trait-level scores with reverse-scored items
+- Computed a Pearson correlation matrix using cor() and psych::corr.test()
+- Tested for statistical significance of correlations (all p <.001) with sample size N = 602,587
+- Visualized the correaltion matrix with ggcorrplot() and corrplot()
+- Used inline R code to insert stats in line. 
