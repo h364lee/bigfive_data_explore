@@ -62,3 +62,43 @@
 - Common interpretation: 
     - r ≥ .30 → Acceptable
     - r < .30 → Consider reviewing the item (it may be poorly worded or unrelated)
+
+# Exploratory Factor Analysis
+## Suitability for Factor Analysis
+You want to confirm that your items form patterns of correlations — EFA only works when there are shared underlying dimensions. If these tests fail, EFA is not meaningful.
+### KMO
+- Kaiser-Meyer-Olkin statistic test: checks whether your variables share enough common variance to justify factor analysis.
+    - KMO > .60: Acceptable
+    - KMO > .80: Meritorious
+### Bartlett's test
+- Checks whether the correaltion matrix significantly differs from an identity matrix (i.e., not just noise)
+    - p < .05: data are suitable for EFA
+
+## Determining Number of Factors
+Trying to discover how many psychological traits are hiding beneath the surface of my item data. Each trait is called a *latent factor*: an invisible psychological trait that causes patterns in item responses (e.g., You can’t measure "Extraversion" directly — but if someone agrees with “I enjoy parties,” “I am talkative,” and “I seek excitement,” you infer a common cause: Extraversion.)
+### Scree plot
+- Shows how much variance is explained by each potential factor
+- The first few peaks are tall = strong factors
+- The line 'elbows' and flattens = weak/noise
+- Keep the factors before the elbow
+### Parallel analysis
+- Real data is compared to randomly shuffled data
+- If my factor has a bigger eigenvalue than the random one, it is probably meaningful
+
+## Factor Loadings
+- Correlation between an item and a latent trait (Analogy: Factor loading = how strongly a light bulb (item) glows when a switch (factor) is turned on.)
+- A loading of .80 means the item strongly reflects that trait.
+- A loading of .20 means the item barely reflects that trait.
+- Items can "cross-load" on multiple traits, which may mean they’re ambiguous.
+
+## Rotation (Oblimin vs. Varimax)
+Factor analysis starts with a mathematical solution, but it's often messy — many items might load a little bit on multiple factors.
+
+Rotation cleans up the solution to make the patterns clearer.
+Varimax = forces traits to be uncorrelated (orthogonal)
+Oblimin = allows traits to correlate (recommended for Big Five)
+
+Analogy: Imagine rotating a spotlight over a stage so it shines directly on clusters of people (items). Rotation helps you reorient the axes so items load more clearly on single traits.
+## Maximum Likelihood Estimation 
+- The method used to 'fit' the factors to your data (mathematical best guess for what the latent factors are).
+- ML (Maximum Likelihood) tries to find the factor structure that makes the observed data most probable.

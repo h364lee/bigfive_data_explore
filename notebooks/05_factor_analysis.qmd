@@ -1,0 +1,225 @@
+--- 
+title: "Factor Analysis"
+author: "Caleb Lee"
+format: html
+execute: 
+    echo: true
+---
+## Objective
+Uncover the underlying factor structure of the Big Five item-level data using Exploratory Factor Analysis (EFA).
+
+## 1. Setup - Load libraries and data
+```{r}
+library(tidyverse)
+library(psych)
+
+bigfive <- read_csv('../data/cleaned/cleaned_bigfive_v1.csv')
+```
+## 2. Identify reverse-coded items
+```{r}
+# Function to extract reversed items
+get_reversed_items <- function(alpha_result) {
+  keys <- unlist(alpha_result$keys)
+  reversed_items <- keys[startsWith(keys, "-")]
+  reversed_items <- gsub("-", "", reversed_items)
+  return(reversed_items)
+}
+
+# Subset each trait's item columns
+opn_items <- bigfive %>% select(matches("^OPN[0-9]+$"))
+ext_items <- bigfive %>% select(matches("^EXT[0-9]+$"))
+agr_items <- bigfive %>% select(matches("^AGR[0-9]+$"))
+csn_items <- bigfive %>% select(matches("^CSN[0-9]+$"))
+nrt_items <- bigfive %>% select(matches("^NRT[0-9]+$"))
+
+# Get reversed items using psych::alpha() and extract keys
+alpha_opn <- alpha(opn_items, check.keys = TRUE)
+alpha_ext <- alpha(ext_items, check.keys = TRUE)
+alpha_agr <- alpha(agr_items, check.keys = TRUE)
+alpha_csn <- alpha(csn_items, check.keys = TRUE)
+alpha_nrt <- alpha(nrt_items, check.keys = TRUE)
+
+reversed_opn <- get_reversed_items(alpha_opn)
+reversed_ext <- get_reversed_items(alpha_ext)
+reversed_agr <- get_reversed_items(alpha_agr)
+reversed_csn <- get_reversed_items(alpha_csn)
+reversed_nrt <- get_reversed_items(alpha_nrt)
+```
+## 3. Apply Reverse Scoring
+```{r}
+# Define reverse-scoring function
+reverse_score <- function(df, items_to_reverse) {
+  df %>% mutate(across(all_of(items_to_reverse), ~ 6 - .))
+}
+
+# Apply reverse scoring to create final scored dataset
+bigfive_scored <- bigfive %>%
+  reverse_score(reversed_opn) %>%
+  reverse_score(reversed_ext) %>%
+  reverse_score(reversed_agr) %>%
+  reverse_score(reversed_csn) %>%
+  reverse_score(reversed_nrt)
+```
+## 4. Subset item-level matrix for EFA
+```{r}
+item_data <- bigfive_scored %>%
+  select(matches("^EXT[0-9]+$"),
+         matches("^AGR[0-9]+$"),
+         matches("^CSN[0-9]+$"),
+         matches("^NRT[0-9]+$"),
+         matches("^OPN[0-9]+$"))
+```
+## 5. Suitability for Factor Analysis
+```{r}
+# KMO - measure of sampling adequacy
+KMO(item_data)
+# Bartlett's test of sphericity
+cortest.bartlett(cor(item_data), n = nrow(item_data))
+```
+## 6. Determine # of Factors
+```{r}
+# Scree plot and parallel analysis
+fa.parallel(item_data, fa = 'fa', fm = 'ml')
+```
+## 7. Factor Analysis
+```{r}
+# Run EFA with 5 factors and oblimin rotation (allow correlated traits)
+efa_result <- fa(item_data, nfactors = 5, rotate = "oblimin", fm = "ml")
+
+# Print loadings (cutoff = 0.3)
+print(efa_result$loadings, cutoff = 0.3)
+```
+```{r}
+# Run EFA with 10 factors as suggested by parallel analysis
+efa_result_10 <- fa(item_data, nfactors = 10, rotate = "oblimin", fm = "ml")
+print(efa_result_10$loadings, cutoff = 0.3)
+
+```
+## 8. Visualization 
+```{r}
+# Factor diagram
+fa.diagram(efa_result)
+# Table of strong loadings
+efa_loadings <- as.data.frame(efa_result$loadings[1:50, ])
+efa_loadings %>% 
+  filter(apply(abs(.), 1, max) >= 0.3) %>%
+  round(2)
+```
+## 9. Results
+This section reports the results of an exploratory factor analysis (EFA) conducted to investigate the latent structure of the 50-item Big Five personality inventory.
+
+### 9.1 Data Preparation
+Prior to EFA, reverse-coded items were identified using `alpha(..., check.keys = TRUE)` and recoded by subtracting item responses from 6 (i.e., `6 - x`). The final dataset (`item_data`) included all 50 Big Five items, grouped by trait: Openness (OPN1–10), Conscientiousness (CSN1–10), Extraversion (EXT1–10), Agreeableness (AGR1–10), and Neuroticism (NRT1–10).
+
+### 9.2 Factorability Checks
+```{r}
+overall_kmo <- round(KMO(item_data)$MSA, 2)
+bartlett <- cortest.bartlett(cor(item_data), n = nrow(item_data))
+bartlett_chi <- round(bartlett$chisq)
+bartlett_df <- bartlett$df
+```
+The Kaiser-Meyer-Olkin (KMO) measure of sampling adequacy was r overall_kmo, indicating excellent shared variance among items.
+Bartlett’s test of sphericity was highly significant, χ²(`r bartlett_df`) = `r bartlett_chi`, p < .001, confirming that the item correlations were sufficient for factor analysis.
+
+### 9.3 Number of Factors
+A parallel analysis was conducted to determine the optimal number of factors to extract. The scree plot and simulated eigenvalues indicated support for a 10-factor solution, though a theory-driven 5-factor solution was also evaluated for comparison.
+```{r}
+cumulative_var_5 <- round(efa_result$Vaccounted["Cumulative Var", 5], 3) * 100
+prop_var_5 <- round(efa_result$Vaccounted["Proportion Var", 1:5], 3)
+cumulative_var_10 <- round(efa_result_10$Vaccounted["Cumulative Var", 10], 3) * 100
+```
+
+The 5-factor model accounted for `r cumulative_var_5`% of total variance, with individual contributions as follows:
+
+Factor 1: `r prop_var_5[1]`
+
+Factor 2: `r prop_var_5[2]`
+
+Factor 3: `r prop_var_5[3]`
+
+Factor 4: `r prop_var_5[4]`
+
+Factor 5: `r prop_var_5[5]`
+
+The 10-factor model explained slightly more (`r cumulative_var_10`%) variance and offered a more detailed view of subtraits.
+
+### 9.4 Five-Factor Solution
+```{r}
+# Helper: compute the loading range (min/max abs loading) per trait
+get_loading_range <- function(prefix, loadings) {
+  items <- rownames(loadings)[grepl(paste0("^", prefix), rownames(loadings))]
+  item_loadings <- loadings[items, ]
+  max_loadings <- apply(abs(item_loadings), 1, max)
+  round(range(max_loadings), 2)
+}
+
+# Calculate loading ranges for each trait (5-factor solution)
+loading_ranges <- list(
+  EXT = get_loading_range("EXT", efa_result$loadings),
+  AGR = get_loading_range("AGR", efa_result$loadings),
+  CSN = get_loading_range("CSN", efa_result$loadings),
+  NRT = get_loading_range("NRT", efa_result$loadings),
+  OPN = get_loading_range("OPN", efa_result$loadings)
+)
+
+# Proportion variance explained in 10-factor model
+prop_var_10 <- round(efa_result_10$Vaccounted["Proportion Var", 1:10], 3)
+
+# Extract top Openness loadings in 10-factor model
+opn_items_10 <- rownames(efa_result_10$loadings)[grepl("^OPN", rownames(efa_result_10$loadings))]
+opn_loadings_10 <- efa_result_10$loadings[opn_items_10, ]
+top_opn_10 <- apply(abs(opn_loadings_10), 1, max)
+top_opn_10 <- round(top_opn_10[c("OPN1", "OPN2", "OPN3", "OPN6", "OPN8")], 2)
+
+
+```
+The five-factor solution aligned closely with the canonical Big Five structure:
+
+Factor 1: Extraversion (EXT1–EXT10)
+
+Factor 2: Neuroticism (NRT1–NRT10)
+
+Factor 3: Agreeableness (AGR1–AGR10)
+
+Factor 4: Openness (OPN1–OPN10)
+
+Factor 5: Conscientiousness (CSN1–CSN10)
+
+Extraversion items showed factor loadings ranging from `r loading_ranges$EXT[1]` to `r loading_ranges$EXT[2]`, Neuroticism from `r loading_ranges$NRT[1]` to `r loading_ranges$NRT[2]`, Agreeableness from `r loading_ranges$AGR[1]` to `r loading_ranges$AGR[2]`, Conscientiousness from `r loading_ranges$CSN[1]` to `r loading_ranges$CSN[2]`, and Openness from `r loading_ranges$OPN[1]` to `r loading_ranges$OPN[2]`.
+
+All 50 items loaded meaningfully (≥ .30) onto their expected factors, with minimal cross-loadings. This provides strong support for the structural validity of the Big Five model in this dataset.
+
+### 9.5 Ten-Factor Solution (Facet-Level Insights)
+A parallel analysis suggested a more complex 10-factor solution, which explained a slightly higher amount of variance (`r cumulative_var_10`%) than the five-factor model. The top five factors in this solution accounted for `r prop_var_10[1]`, `r prop_var_10[2]`, `r prop_var_10[3]`, `r prop_var_10[4]`, and `r prop_var_10[5]` of the total variance, respectively.
+
+This solution revealed facet-level distinctions within broader traits:
+
+Neuroticism appeared to divide into general emotional instability and a secondary anxiety-related cluster.
+
+Openness separated into two subdimensions:
+
+OPN3 (`r top_opn_10["OPN3"]`) and OPN6 (`r top_opn_10["OPN6"]`) loaded most strongly on an intellect-related factor.
+
+OPN1 (`r top_opn_10["OPN1"]`) and OPN8 (`r top_opn_10["OPN8"]`) loaded highly on an aesthetic/imaginative factor.
+
+OPN2 also showed a notable loading (`r top_opn_10["OPN2"]`), supporting this multidimensional structure.
+
+These results suggest that the Big Five traits in this dataset may be composed of meaningful facet-level substructures, consistent with models like the NEO-PI-R. While more complex, this solution may offer deeper psychological insight and can inform future confirmatory work.
+
+
+
+### 9.6 Factor Loading and Diagram
+```{r}
+efa_table <- as.data.frame(efa_result$loadings[1:50, ]) %>%
+  filter(apply(abs(.), 1, max) >= 0.3) %>%
+  round(2)
+
+knitr::kable(efa_table, caption = "Five-Factor Loadings (≥ .30)")
+```
+```{r}
+fa.diagram(efa_result)
+```
+
+A factor loading table (above) shows items with loadings ≥ .30. The diagram visually represents the structure of the 5-factor solution, confirming the clustering of items into their expected Big Five domains.
+
+
