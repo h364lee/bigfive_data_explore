@@ -13,7 +13,7 @@ Uncover the underlying factor structure of the Big Five item-level data using Ex
 library(tidyverse)
 library(psych)
 
-bigfive <- read_csv('../data/cleaned/cleaned_bigfive_v1.csv')
+bigfive <- read_csv('./data/cleaned/cleaned_bigfive_v1.csv')
 ```
 ## 2. Identify reverse-coded items
 ```{r}

@@ -86,3 +86,15 @@ Run `notebooks/00_data_cleaning.ipynb` with raw CSV in `data/raw/`
 - Tested for statistical significance of correlations (all p <.001) with sample size N = 602,587
 - Visualized the correaltion matrix with ggcorrplot() and corrplot()
 - Used inline R code to insert stats in line. 
+
+## 2025-07-18
+- Identified and reverse-coded items
+- Exploratory Factor Analysis
+    - Checked factorability with KMO and Bartlett's X2
+    - Ran parallel analysis: suggested 10-factor solution
+    - Estimated EFA models
+        - 5-factor model (based on theory)
+        - 10-factor model (data driven from parallel analysis)
+    - Rotation method: maximum likelihood
+    - MOre variance explained by the 10-factor model
+    - Visualized factor structure
