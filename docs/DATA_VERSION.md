@@ -98,3 +98,11 @@ Run `notebooks/00_data_cleaning.ipynb` with raw CSV in `data/raw/`
     - Rotation method: maximum likelihood
     - MOre variance explained by the 10-factor model
     - Visualized factor structure
+## 2025-07-26
+- Corrected trait scores by reverse-scoring all negatively keyed items
+- **`notebooks/00.1_rescoring_bigfive.ipynb`** — Creates `cleaned_bigfive_v2.csv` from v1.
+- **`analysis/01_univariate_EDA_v2.qmd`** — Updated to use corrected scores; added Table 1 comparing v1 vs v2 means.
+- **`analysis/02_group_comparison_v2.qmd`** — Updated to use corrected scores; added Table 1 comparing v1 vs v2 means.
+
+- Ensure that all Big Five trait scores reflect correct reverse-scoring before further analyses.
+- All subsequent analyses (EDA, ANOVAs, group comparisons) will now use the corrected dataset.
