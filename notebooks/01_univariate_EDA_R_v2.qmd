@@ -1,0 +1,102 @@
+---
+title: "Univariate EDA in R (Corrected Scores)"
+author: "Caleb Lee"
+format: html
+execute:
+    echo: true
+---
+This notebook uses **corrected trait scores** from `cleaned_bigfive_v2.csv`, which includes proper reverse-scoring for all negatively keyed items.  
+```{r}
+library(tidyverse)
+
+# Load corrected dataset
+bigfive_v1 <- read_csv("./data/cleaned/cleaned_bigfive_v1.csv")
+bigfive_v2 <- read_csv("./data/cleaned/cleaned_bigfive_v2.csv")
+ 
+set.seed(12) #same seed as v1.
+bigfive_sample <- bigfive_v2 %>% sample_n(5000)
+
+glimpse(bigfive_v2)
+summary(bigfive_v2)
+```
+```{r}
+# Compute means for v1 and v2
+traits <- c("Openness","Conscientiousness","Extraversion","Agreeableness","Neuroticism")
+
+means_v1 <- bigfive_v1 %>%
+  summarize(across(all_of(traits), mean, na.rm = TRUE)) %>%
+  pivot_longer(everything(), names_to = "Trait", values_to = "Mean_v1")
+
+means_v2 <- bigfive_v2 %>%
+  summarize(across(all_of(traits), mean, na.rm = TRUE)) %>%
+  pivot_longer(everything(), names_to = "Trait", values_to = "Mean_v2")
+
+means_compare <- left_join(means_v1, means_v2, by = "Trait") %>%
+  mutate(Difference = round(Mean_v2 - Mean_v1, 3))
+
+knitr::kable(means_compare, caption = "Table 1. Comparison of Trait Means Before and After Rescoring")
+```
+```{r}
+bigfive_long <- bigfive_sample %>%
+  pivot_longer(
+    cols = (all_of(traits)),
+    names_to = "Trait",
+    values_to = "Score"
+  )
+```
+```{r}
+trait_summary <- bigfive_long %>%
+  group_by(Trait) %>%
+  summarize(
+    n = n(),
+    mean = mean(Score, na.rm = TRUE),
+    sd = sd(Score, na.rm = TRUE),
+    min = min(Score, na.rm = TRUE),
+    max = max(Score, na.rm = TRUE)
+  )
+
+knitr::kable(trait_summary, caption = "Table 2. Descriptive Statistics for Big Five Traits (Corrected Scores, n = 5,000)")
+```
+
+```{r}
+extraversion_mean <- mean(bigfive_sample$Extraversion, na.rm = TRUE)
+
+ggplot(bigfive_sample, aes(x = Extraversion)) + 
+  geom_histogram(aes(y = ..density..), bins = 30, fill = "steelblue", color = "white") +
+  geom_density(color = "red", size = 1) +
+  geom_vline(xintercept = extraversion_mean, color = "black", linetype = "dashed", size = 1) +
+  scale_x_continuous(limits = c(1, 5), breaks = 1:5) +
+  labs(title = "Histogram + KDE: Extraversion (n = 5,000)", x = "Score", y = "Density") +
+  theme_minimal()
+```
+```{r}
+trait_means <- bigfive_long %>%
+  group_by(Trait) %>%
+  summarize(Mean = mean(Score, na.rm = TRUE))
+
+ggplot(bigfive_long, aes(x = Score)) +
+  geom_histogram(aes(y = ..density..), bins = 30, fill = "steelblue", color = "white") +
+  geom_density(color = "red", size = 1) +
+  geom_vline(data = trait_means, aes(xintercept = Mean), color = "black", linetype = "dashed", size = 1) +
+  facet_wrap(~ Trait) +
+  scale_x_continuous(limits = c(1, 5), breaks = 1:5) +
+  labs(title = "Big Five Traits: Histogram + KDE (Corrected Scores, n = 5,000)", x = "Score", y = "Density") +
+  theme_minimal()
+```
+```{r}
+ggplot(bigfive_sample, aes(y = Openness, x = "")) +
+  geom_boxplot(fill = "lightblue") +
+  geom_hline(yintercept = mean(bigfive_sample$Openness, na.rm = TRUE),
+             color = "red", linetype = "dashed", size = 1) +
+  scale_y_continuous(limits = c(1, 5), breaks = 1:5) +
+  labs(title = "Boxplot: Openness (Corrected Scores, n = 5,000)", x = "", y = "Openness Score") +
+  theme_minimal()
+```
+```{r}
+ggplot(bigfive_long, aes(x = Trait, y = Score)) +
+  geom_boxplot(fill = "lightblue") +
+  stat_summary(fun = mean, geom = "point", shape = 20, size = 3, color = "red") +
+  scale_y_continuous(limits = c(1, 5), breaks = 1:5) +
+  labs(title = "Boxplots of Big Five Traits (Corrected Scores, n = 5,000)", x = "Trait", y = "Score") +
+  theme_minimal()
+```

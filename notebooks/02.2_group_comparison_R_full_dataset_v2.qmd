@@ -1,0 +1,114 @@
+---
+title: "Group Comparison in R (Corrected Scores)"
+author: "Caleb Lee"
+format: html
+execute:
+    echo: true
+---
+
+# Overview
+This notebook uses **corrected trait scores** from `cleaned_bigfive_v2.csv`, which includes proper reverse-scoring for all negatively keyed items.
+
+---
+
+## Load Packages & Data
+```{r}
+library(tidyverse)
+library(broom)
+
+# Load both versions to compare means
+bigfive_v1 <- read_csv("./data/cleaned/cleaned_bigfive_v1.csv")
+bigfive_v2 <- read_csv("./data/cleaned/cleaned_bigfive_v2.csv")
+
+# Load country info file
+country_info <- read_csv("./data/cleaned/country_names_220.csv")
+```
+```{r}
+traits <- c("Openness","Conscientiousness","Extraversion","Agreeableness","Neuroticism")
+
+means_v1 <- bigfive_v1 %>%
+  summarize(across(all_of(traits), mean, na.rm = TRUE)) %>%
+  pivot_longer(everything(), names_to = "Trait", values_to = "Mean_v1")
+
+means_v2 <- bigfive_v2 %>%
+  summarize(across(all_of(traits), mean, na.rm = TRUE)) %>%
+  pivot_longer(everything(), names_to = "Trait", values_to = "Mean_v2")
+
+means_compare <- left_join(means_v1, means_v2, by = "Trait") %>%
+  mutate(Difference = round(Mean_v2 - Mean_v1, 3))
+
+knitr::kable(means_compare, caption = "Table 1. Comparison of Trait Means Before and After Rescoring")
+```
+```{r}
+bigfive_filtered <- bigfive_v2 %>%
+    filter(!is.na(country) & country != "NONE") %>%
+    left_join(country_info, by = c("country" = "country_code")) %>%
+    filter(continent != "Other")
+
+summary(bigfive_filtered$continent)
+summary(bigfive_filtered$cultural_group)
+```
+```{r}
+traits <- c("Openness", "Conscientiousness", "Extraversion", "Agreeableness", "Neuroticism")
+
+anova_results <- list()
+tukey_results <- list()
+
+for (trait in traits) {
+  formula <- as.formula(paste(trait, "~ continent"))
+  model <- aov(formula, data = bigfive_filtered)
+  anova_results[[trait]] <- summary(model)
+  tukey_results[[trait]] <- TukeyHSD(model)
+}
+
+anova_results[["Openness"]]
+tukey_results[["Openness"]]
+```
+```{r}
+for (trait in traits) {
+  p <- ggplot(bigfive_filtered, 
+              aes(x = continent, y = .data[[trait]], fill = continent)) +
+    geom_violin(trim = FALSE, alpha = 0.7, bw = 0.3) +
+    geom_boxplot(width = 0.1, fill = "white", outlier.shape = NA) +
+    labs(title = paste("Distribution of", trait, "by Continent"),
+         x = "Continent", y = trait) +
+    theme_minimal() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+    scale_fill_brewer(palette = "Set2")
+  
+  print(p)
+}
+```
+```{r}
+bigfive_cultural <- bigfive_filtered %>%
+  filter(!is.na(cultural_group))
+
+anova_results_cultural <- list()
+tukey_results_cultural <- list()
+
+for (trait in traits) {
+  formula <- as.formula(paste(trait, "~ cultural_group"))
+  model <- aov(formula, data = bigfive_cultural)
+  anova_results_cultural[[trait]] <- summary(model)
+  tukey_results_cultural[[trait]] <- TukeyHSD(model)
+}
+
+anova_results_cultural[["Openness"]]
+tukey_results_cultural[["Openness"]]
+```
+```{r}
+for (trait in traits) {
+  p <- ggplot(bigfive_cultural, 
+              aes(x = cultural_group, y = .data[[trait]], fill = cultural_group)) +
+    geom_violin(trim = FALSE, alpha = 0.7, bw = 0.3) +
+    geom_boxplot(width = 0.1, fill = "white", outlier.shape = NA) +
+    labs(title = paste("Distribution of", trait, "by Cultural Group"),
+         x = "Cultural Group", y = trait) +
+    theme_minimal() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 9)) +
+    scale_fill_manual(values = rep_len(RColorBrewer::brewer.pal(8, "Set3"), 
+                                       length(unique(bigfive_cultural$cultural_group))))
+  
+  print(p)
+}
+```
