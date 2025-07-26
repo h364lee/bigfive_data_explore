@@ -15,6 +15,7 @@ data/raw/*
 # Cleaned data: allow folder but ignore big files
 !data/cleaned/
 data/cleaned/cleaned_bigfive_v1.csv
+data/cleaned/cleaned_bigfive_v2.csv
 
 # OS junk
 .DS_Store
